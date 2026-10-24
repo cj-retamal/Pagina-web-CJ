@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="meta.title">Carime Jackson — Stickers, ilustración y merch</title>
+<meta name="description" data-i18n-attr="content:meta.desc" content="Stickers, llaveros y merch de anime y cultura pop hechos a mano por Caro en Concepción, Chile.">
+<link rel="icon" type="image/svg+xml" href="assets/logos/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+  /* Tokens del design system Carime Jackson */
+  :root{
+    --primario:#132436;
+    --secundario:#f7f0ed;
+    --acento:#e86c7a;
+    --fondo-claro:#f8f3f3;
+    --fondo-medio:#f5d9d8;
+    --texto:#3a4961;
+    --panel:#f9f3f3b3;
+    --blanco:#ffffff;
+    --font-sans:"Montserrat","Helvetica Neue",Arial,sans-serif;
+    --font-mano:"Architects Daughter","Comic Sans MS",cursive;
+    --radius-panel:16px;
+    --radius-pill:37px;
+    --glow-rosa:0 0 6.3px 0 #e16a7d57;
+    --tracking-caps:0.19em;
+    --tracking-cuerpo:0.10em;
+  }
+  /* Japonés: el latín sigue en Montserrat y los kana/kanji caen en una fuente japonesa del sistema */
+  :root:lang(ja){
+    --font-sans:"Montserrat","Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;
+    --font-mano:"Architects Daughter","Hiragino Maru Gothic ProN","Kosugi Maru","Noto Sans JP",sans-serif;
+    --tracking-caps:0.06em;
+    --tracking-cuerpo:0.04em;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;scroll-padding-top:90px;}
+  body{margin:0;font-family:var(--font-sans);font-size:16px;line-height:1.5;color:var(--texto);background:var(--fondo-claro);}
+  a{color:var(--texto);}
+  a:hover{color:var(--primario);}
+  button,input,select{font-family:inherit;}
+  button{cursor:pointer;}
+  :focus-visible{outline:3px solid var(--primario);outline-offset:3px;}
+  img{display:block;max-width:100%;}
+  .caps{font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .wrap{max-width:1200px;margin:0 auto;padding:64px 20px;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+  /* Botones */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 28px;border-radius:var(--radius-pill);font-size:15px;font-weight:700;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);text-decoration:none;border:2px solid var(--primario);transition:background .15s ease,color .15s ease;}
+  .btn-primario{background:var(--primario);color:var(--secundario);}
+  .btn-primario:hover{background:var(--texto);border-color:var(--texto);color:var(--secundario);}
+  .btn-borde{background:transparent;color:var(--texto);border-color:var(--texto);}
+  .btn-borde:hover{background:var(--texto);color:var(--secundario);}
+  .btn-sm{min-height:44px;padding:0 18px;font-size:14px;}
+  .btn-full{width:100%;}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:var(--fondo-claro);border-bottom:1px solid var(--fondo-medio);}
+  .header-in{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;}
+  .marca{display:flex;align-items:center;text-decoration:none;}
+  .marca img{height:64px;width:auto;}
+  /* Íconos de redes del design system (dibujados en currentColor) */
+  .icono{display:inline-block;flex:0 0 auto;width:12px;height:12px;background:currentColor;-webkit-mask:var(--icono) center/contain no-repeat;mask:var(--icono) center/contain no-repeat;}
+  .icono-instagram{--icono:url("assets/iconos/instagram.svg");}
+  .icono-web{--icono:url("assets/iconos/web.svg");}
+  .icono-md{width:16px;height:16px;}
+  .icono-carrito{flex:0 0 auto;width:20px;height:20px;}
+  .corazon{display:block;width:28px;height:auto;}
+  nav{display:flex;flex-wrap:wrap;align-items:center;gap:4px;}
+  .nav-link{padding:12px 14px;font-size:14px;font-weight:500;text-decoration:none;}
+  .nav-lista{margin-left:8px;padding:0 14px;}
+  .nav-menu{display:flex;align-items:center;gap:4px;}
+  /* Botón hamburguesa: solo visible en mobile */
+  .hamburguesa{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:0 10px;background:transparent;border:0;border-radius:8px;}
+  .hamburguesa span{display:block;height:3px;border-radius:2px;background:var(--acento);transition:transform .2s ease,opacity .2s ease;}
+  .hamburguesa[aria-expanded="true"] span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+  .hamburguesa[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .hamburguesa[aria-expanded="true"] span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+  /* Selector de idioma: se ve como un enlace más del menú (globo + código + flecha); encima va el
+     desplegable nativo transparente, así al abrirlo aparecen los nombres completos */
+  .idioma{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-left:4px;padding:0 14px;border-radius:var(--radius-pill);color:var(--texto);font-size:14px;font-weight:500;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .idioma:hover{color:var(--primario);background:var(--secundario);}
+  /* El borde de foco solo aparece al llegar con teclado (Tab), no al hacer clic */
+  .idioma.con-teclado{outline:3px solid var(--primario);outline-offset:3px;}
+  .idioma svg{flex:0 0 auto;}
+  .idioma-globo{width:16px;height:16px;}
+  .idioma-flecha{width:12px;height:12px;}
+  .idioma select{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;font-size:16px;cursor:pointer;}
+  /* Selector de moneda (CLP o USD; 1.000 CLP = 1 USD) */
+  .selector{display:flex;margin-left:8px;padding:3px;border-radius:var(--radius-pill);border:2px solid var(--acento);}
+  .selector button{min-width:48px;min-height:36px;padding:0 10px;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--acento);font-size:13px;font-weight:700;letter-spacing:.08em;}
+  .selector button[aria-pressed="true"]{background:var(--acento);color:var(--blanco);}
+  .selector button:hover:not([aria-pressed="true"]){background:var(--secundario);}
+  .contador{display:inline-flex;min-width:24px;height:24px;padding:0 6px;align-items:center;justify-content:center;border-radius:var(--radius-pill);background:var(--secundario);color:var(--primario);font-size:13px;letter-spacing:0;font-variant-caps:normal;}
+
+  /* Hero */
+  .hero{display:flex;flex-wrap:wrap;align-items:center;gap:48px;}
+  .hero-texto{flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:24px;}
+  .kicker{margin:0;font-size:12px;font-weight:700;}
+  h1{margin:0;font-size:clamp(34px,4.6vw,56px);line-height:1.15;font-weight:800;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .acento{color:var(--acento);}
+  .hero-intro{margin:0;max-width:520px;font-size:18px;line-height:1.6;}
+  .acciones{display:flex;flex-wrap:wrap;gap:12px;}
+  .hero-visual{flex:1 1 360px;min-width:0;display:flex;justify-content:center;}
+  /* Avatar: el boceto (PNG transparente) sobre un círculo rosado; la cabeza y la mano sobresalen.
+     Medidas en % de la imagen (1680×1880 en el original): círculo de 1274px con centro en (964, 1243). */
+  .avatar{position:relative;width:100%;max-width:460px;aspect-ratio:1680/1880;}
+  .avatar::before{content:"";position:absolute;left:19.5%;top:32.2%;width:75.8%;aspect-ratio:1/1;border-radius:50%;background:var(--fondo-medio);}
+  /* Abajo el dibujo se recorta con el círculo para que el cuerpo no termine en un corte recto */
+  .avatar img{position:relative;width:100%;height:100%;
+    -webkit-mask:radial-gradient(37.9% 33.9% at 57.4% 66.1%,#000 99.5%,transparent 100%),linear-gradient(#000 72%,transparent 82%);
+    mask:radial-gradient(37.9% 33.9% at 57.4% 66.1%,#000 99.5%,transparent 100%),linear-gradient(#000 72%,transparent 82%);}
+
+  /* Secciones */
+  h2{margin:0;font-size:clamp(24px,2.6vw,32px);line-height:1.25;font-weight:400;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .seccion-suave{background:var(--secundario);}
+  .seccion-rosa{background:var(--fondo-medio);}
+  /* Sección oscura (personalizados): fondo primario, texto claro; las tarjetas siguen blancas */
+  .seccion-oscura{background:var(--primario);color:var(--secundario);}
+  .seccion-oscura .btn-primario{background:var(--secundario);border-color:var(--secundario);color:var(--primario);}
+  .seccion-oscura .btn-primario:hover{background:var(--blanco);border-color:var(--blanco);color:var(--primario);}
+  .seccion-oscura .tarjeta,.seccion-oscura .panel{background:var(--blanco);color:var(--texto);box-shadow:none;}
+  .seccion-oscura .panel .btn-primario{background:var(--acento);border-color:var(--acento);color:var(--blanco);}
+  .seccion-oscura .panel .btn-primario:hover{background:color-mix(in srgb,var(--acento) 50%,var(--fondo-medio));border-color:color-mix(in srgb,var(--acento) 50%,var(--fondo-medio));color:var(--primario);}
+  .seccion-oscura :focus-visible{outline-color:var(--acento);}
+  .pasos{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+  .tarjeta{background:var(--blanco);border-radius:var(--radius-panel);box-shadow:var(--glow-rosa);}
+  .paso{padding:28px;display:flex;flex-direction:column;gap:10px;}
+  .paso-num{font-size:32px;font-weight:800;color:var(--acento);line-height:1;}
+  .paso-titulo{font-size:14px;font-weight:700;}
+  .promos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;}
+  .promos[hidden]{display:none;}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-pill);background:var(--fondo-medio);font-size:13px;}
+
+  /* Tienda */
+  .tienda-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;}
+  .controles{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;}
+  .campo{display:flex;flex-direction:column;gap:4px;}
+  .campo label{font-size:12px;font-weight:700;}
+  .input{height:44px;padding:0 16px;border-radius:var(--radius-pill);border:2px solid var(--fondo-medio);background:var(--blanco);color:var(--texto);font-size:15px;}
+  .input:focus{border-color:var(--texto);}
+  #buscar{width:300px;max-width:100%;padding-left:44px;}
+  /* Lupa dentro del buscador, en el rosa de acento para que se note */
+  .buscador{position:relative;}
+  .lupa{position:absolute;left:16px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--acento);pointer-events:none;}
+  .tienda-cuerpo{display:flex;flex-wrap:wrap;align-items:flex-start;gap:32px;}
+  .catalogo{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px;}
+  #resultados{margin:0;font-size:14px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:20px;}
+  .estado{padding:40px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;}
+  .estado p{margin:0;}
+  .estado[hidden]{display:none;}
+
+  .card{overflow:hidden;display:flex;flex-direction:column;}
+  .card-img{position:relative;aspect-ratio:1/1;background:var(--fondo-medio);display:flex;align-items:center;justify-content:center;padding:0;}
+  .card-img img{width:100%;height:100%;object-fit:cover;}
+  .card-img .ph{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;text-align:center;font-size:12px;}
+  .badge-agotado{position:absolute;top:10px;left:10px;padding:4px 12px;border-radius:var(--radius-pill);background:var(--blanco);font-size:12px;font-weight:700;}
+  .card.agotado .card-img img{opacity:.55;}
+  .card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex-grow:1;}
+  .card-cat{font-size:12px;}
+  .card h3{margin:0;font-size:16px;font-weight:700;line-height:1.3;}
+  .precio-fila{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;}
+  .precio{font-size:18px;font-weight:800;}
+  .promo{font-size:12px;padding:2px 10px;border-radius:var(--radius-pill);background:var(--secundario);}
+  .stock{font-size:13px;}
+  .stock.poco{font-weight:700;}
+  .card-accion{margin-top:auto;padding-top:8px;}
+  .stepper{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;border-radius:var(--radius-pill);border:2px solid var(--primario);padding:0 4px;}
+  .stepper button{width:40px;height:36px;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--primario);font-size:20px;font-weight:700;}
+  .stepper button:hover{background:var(--secundario);}
+  .stepper button:disabled{opacity:.35;cursor:not-allowed;}
+  .stepper span{font-size:14px;font-weight:700;}
+
+  .card-img{border:0;cursor:zoom-in;font:inherit;color:inherit;width:100%;}
+  .card h3 button{all:unset;cursor:pointer;}
+  .card h3 button:hover{text-decoration:underline;}
+  .card-img:focus-visible,.card h3 button:focus-visible{outline:3px solid var(--acento);outline-offset:2px;}
+
+  /* Detalle de producto */
+  .detalle{width:min(1080px,calc(100vw - 32px));max-height:calc(100vh - 32px);padding:0;border:0;background:transparent;color:var(--texto);overflow:visible;}
+  .detalle::backdrop{background:rgba(19,36,54,.55);}
+  .detalle-nav{position:relative;display:flex;align-items:center;gap:16px;}
+  .detalle-in{position:relative;flex:1 1 auto;min-width:0;max-height:calc(100vh - 32px);overflow:auto;display:flex;flex-wrap:wrap;border-radius:var(--radius-panel);background:var(--blanco);box-shadow:var(--glow-rosa);}
+  .flecha{flex:0 0 auto;width:52px;height:52px;border:0;border-radius:50%;background:var(--blanco);color:var(--primario);box-shadow:var(--glow-rosa);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;}
+  .flecha:hover{background:var(--fondo-medio);}
+  .flecha:focus-visible{outline:3px solid var(--acento);outline-offset:2px;}
+  .flecha[hidden]{display:none;}
+  .detalle-pos{font-size:13px;}
+  .detalle-foto{flex:1 1 420px;min-width:0;aspect-ratio:1/1;background:var(--fondo-medio);display:flex;align-items:center;justify-content:center;}
+  .detalle-foto img{width:100%;height:100%;object-fit:contain;}
+
+  /* Loader: el corazón del logo dibujándose (assets/logos/corazon-loader.svg) */
+  .cargador{padding:56px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;}
+  .cargador img{width:96px;height:auto;}
+  .cargador p{margin:0;font-family:var(--font-mano);font-size:20px;letter-spacing:var(--tracking-cuerpo);}
+  .cargador[hidden]{display:none;}
+  /* Mientras una foto carga, el corazón se dibuja en su lugar */
+  .card-img img,.detalle-foto img{transition:opacity .25s ease;}
+  .cargando{background-image:url("assets/logos/corazon-loader.svg");background-repeat:no-repeat;background-position:center;background-size:56px auto;}
+  .detalle-foto.cargando{background-size:96px auto;}
+  .card .card-img.cargando img,.detalle-foto.cargando img{opacity:0;}
+  .detalle-foto .ph{display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px;text-align:center;}
+  .detalle-info{flex:1 1 300px;min-width:0;padding:40px 32px 32px;display:flex;flex-direction:column;gap:12px;}
+  .detalle-info h2{font-size:26px;font-weight:700;}
+  .detalle-info .precio{font-size:28px;}
+  .detalle-promo{padding:14px 16px;border-radius:12px;background:var(--secundario);font-size:14px;display:flex;flex-direction:column;gap:4px;}
+  .detalle-promo strong{font-size:16px;}
+  .detalle-info .card-accion{padding-top:12px;}
+  .cerrar{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;border-radius:50%;background:var(--secundario);color:var(--primario);font-size:24px;line-height:1;cursor:pointer;z-index:1;}
+  .cerrar:hover{background:var(--fondo-medio);}
+
+  /* Carrito */
+  .lista{flex:1 1 300px;min-width:0;padding:24px;display:flex;flex-direction:column;gap:16px;position:sticky;top:96px;max-height:calc(100vh - 120px);overflow-y:auto;}
+  /* Nada del carrito se encoge (así el aviso nunca queda encima del pedido): la que se ajusta es la lista
+     de productos, con scroll propio y un alto máximo que deja a la vista totales, botones y aviso */
+  .lista > *{flex-shrink:0;}
+  #lista-llena{flex:0 0 auto;}
+  .lista h2{font-size:20px;}
+  .lista p{margin:0;font-size:15px;}
+  .lista ul{margin:0;padding:0 4px 0 0;list-style:none;display:flex;flex-direction:column;gap:12px;min-height:120px;max-height:max(120px, 100vh - 680px);overflow-y:auto;overscroll-behavior:contain;}
+  .lista li{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--fondo-medio);}
+  .lista li div{display:flex;flex-direction:column;min-width:0;}
+  .lista li strong{font-size:15px;}
+  .lista li small{font-size:13px;}
+  .quitar{flex:0 0 auto;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:var(--secundario);color:var(--texto);display:flex;align-items:center;justify-content:center;}
+  .quitar:hover{background:var(--fondo-medio);color:var(--primario);}
+  .quitar svg{width:18px;height:18px;}
+  .totales{display:flex;flex-direction:column;gap:6px;font-size:15px;}
+  .totales div{display:flex;justify-content:space-between;gap:12px;}
+  .totales .total{font-size:18px;font-weight:800;padding-top:6px;}
+  .nota{font-size:13px !important;}
+  /* Aviso fijo al pie del carrito (se ve vacío o lleno) */
+  .lista .aviso-pedido{padding:12px 14px;border-left:4px solid var(--acento);border-radius:0 12px 12px 0;background:var(--secundario);color:var(--primario);font-size:14px;font-weight:500;}
+
+  /* Encargos personalizados */
+  .encargos{display:flex;flex-direction:column;gap:32px;}
+  .encargos-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;}
+  .encargos-head .col{flex:1 1 420px;}
+  .encargos h3{margin:0;}
+  .encargos-sub{font-size:22px;font-weight:400;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .servicios{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;}
+  .servicio{padding:24px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
+  /* Ejemplo de cada estilo (assets/personalizados/*.webp); los recortados flotan, los rectangulares van como lámina */
+  .servicio-img{align-self:stretch;height:200px;margin-bottom:6px;padding:12px;border-radius:12px;background:var(--fondo-claro);display:flex;align-items:center;justify-content:center;}
+  .servicio-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(19,36,54,.15));}
+  .servicio-img.plano img{border-radius:4px;}
+  .servicio h3{font-size:16px;font-weight:700;line-height:1.3;}
+  .servicio p,.paso p{margin:0;font-size:14px;}
+  .servicio-precio{font-size:22px !important;font-weight:800;color:var(--primario);line-height:1;}
+  .servicio-tag{padding:4px 14px;border-radius:var(--radius-pill);background:var(--acento);color:var(--blanco);font-size:14px;font-weight:700;}
+  .extra{padding:4px 12px;border-radius:12px;background:var(--secundario);font-size:13px;letter-spacing:.08em;line-height:1.3;}
+  .servicio .extra:first-of-type{margin-top:auto;}
+  .editorial{padding:32px;display:flex;flex-wrap:wrap;align-items:center;gap:32px;}
+  .editorial h3{font-size:22px;font-weight:700;}
+  .editorial .col p{font-size:15px;}
+  .editorial-kicker{font-size:26px !important;}
+  .editorial-precios{flex:1 1 360px;margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end;text-align:center;}
+  .editorial-precios li{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .editorial-precios img{width:100%;max-height:180px;object-fit:contain;margin-bottom:6px;filter:drop-shadow(0 4px 8px rgba(19,36,54,.18));}
+  .editorial-precios li > span{font-size:13px;}
+  .editorial-precios strong{font-size:16px;font-weight:800;}
+  .encargos .pasos{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));}
+  .encargos-pie{display:flex;flex-wrap:wrap;align-items:flex-start;gap:40px;}
+  .condiciones{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:12px;font-size:15px;}
+  .condiciones li::marker{color:var(--acento);font-weight:800;}
+
+  /* Personalizados y sobre mí */
+  .dos-col{display:flex;flex-wrap:wrap;align-items:center;gap:40px;}
+  .col{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:16px;}
+  .col p{margin:0;font-size:17px;}
+  .panel{flex:1 1 360px;min-width:0;background:var(--panel);border-radius:var(--radius-panel);box-shadow:var(--glow-rosa);padding:32px;display:flex;flex-direction:column;gap:14px;text-align:center;}
+  .panel p{margin:0;font-size:14px;}
+  .panel .precio-servicio{font-size:16px;letter-spacing:var(--tracking-cuerpo);}
+  /* Banner vertical de pinturas (assets/ilustraciones/paintings-banner-*.webp, 2523×9178 en el original):
+     la columna toma la altura del texto y la imagen la cubre desde arriba, recortando lo que sobre abajo. */
+  .sobre{flex-wrap:nowrap;align-items:stretch;}
+  .sobre-visual{flex:0 0 clamp(200px,24vw,300px);position:relative;border-radius:var(--radius-panel);overflow:hidden;}
+  .sobre-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;}
+  .mano{font-family:var(--font-mano);font-size:24px;letter-spacing:var(--tracking-cuerpo);}
+  .sobre-texto{max-width:620px;}
+  .sobre-texto p{margin:0 0 14px;}
+  .frase-final{max-width:620px;margin:12px 0 0;padding-left:20px;border-left:4px solid var(--acento);font-size:28px;line-height:1.3;}
+
+  /* Footer */
+  footer{background:var(--primario);color:var(--secundario);}
+  footer a{color:var(--secundario);}
+  footer a:hover{color:var(--blanco);}
+  .footer-in{max-width:1200px;margin:0 auto;padding:48px 20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px;}
+  .footer-col{display:flex;flex-direction:column;gap:10px;}
+  .footer-col .titulo{font-size:14px;font-weight:700;}
+  .footer-logo{height:72px;width:auto;}
+  .red{display:flex;align-items:center;gap:8px;font-size:12px;}
+
+  /* Tablet y mobile: los enlaces del header pasan al menú hamburguesa */
+  @media (max-width:1024px){
+    .header-in{flex-wrap:nowrap;}
+    .hamburguesa{display:flex;order:2;margin-left:4px;}
+    .nav-menu{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:8px 16px 16px;background:var(--fondo-claro);border-bottom:1px solid var(--fondo-medio);box-shadow:0 8px 16px rgba(19,36,54,.08);}
+    .nav-menu.abierto{display:flex;}
+    .nav-link{padding:14px 4px;font-size:16px;border-bottom:1px solid var(--fondo-medio);}
+    .nav-link:last-of-type{border-bottom:0;}
+    .idioma{align-self:flex-start;margin:8px 0 0;padding:0 4px;font-size:16px;}
+  }
+  @media (max-width:820px){
+    /* En pantallas angostas el banner pasa arriba del texto como una franja */
+    .sobre{flex-direction:column;gap:32px;}
+    .sobre-visual{flex:0 0 auto;height:clamp(220px,60vw,360px);}
+  }
+  @media (max-width:720px){
+    .wrap{padding:48px 16px;}
+    .header-in{padding:10px 16px;}
+    .header-in{flex-wrap:nowrap;}
+    .marca img{height:42px;}
+    .nav-lista{margin-left:0;padding:0 14px;}
+    .moneda{margin-left:0;}
+    .moneda button{min-width:40px;padding:0 6px;}
+    #tienda > *{min-width:0;}
+    .lista{position:static;max-height:none;overflow:visible;}
+    .lista ul{max-height:50vh;}
+    #buscar{width:100%;}
+    .controles,.campo{flex:1 1 100%;}
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+    .card-body{padding:12px;}
+    .detalle{width:calc(100vw - 16px);}
+    .detalle-nav{gap:0;}
+    .flecha{position:absolute;top:calc((100vw - 16px) / 2 - 22px);width:44px;height:44px;background:rgba(255,255,255,.9);}
+    .flecha-prev{left:8px;}
+    .flecha-next{right:8px;}
+    .detalle-info{padding:24px 20px;}
+    .detalle-info h2{font-size:22px;}
+  }
+  /* Pantallas grandes (2K, 4K): todo el sitio se agranda en proporción para no quedar
+     como una columna diminuta. zoom también multiplica vh, así que esas alturas se dividen por --zoom */
+  @media (min-width:1800px){ html{--zoom:1.25;zoom:var(--zoom);} }
+  @media (min-width:2400px){ html{--zoom:1.6;} }
+  @media (min-width:3200px){ html{--zoom:2;} }
+  @media (min-width:1800px){
+    .detalle{max-height:calc((100vh - 32px) / var(--zoom));}
+    .detalle-in{max-height:calc((100vh - 32px) / var(--zoom));}
+    .lista{max-height:calc(100vh / var(--zoom) - 120px);}
+    .lista ul{max-height:max(120px, 100vh / var(--zoom) - 680px);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-in">
+    <a href="#inicio" class="marca">
+      <img src="assets/logos/logo-secundario.svg" alt="Carime Jackson, inicio" data-i18n-attr="alt:logo.alt" width="108" height="52">
+    </a>
+    <nav aria-label="Principal" data-i18n-attr="aria-label:nav.aria">
+      <button type="button" class="hamburguesa" id="hamburguesa" aria-expanded="false" aria-controls="menu-principal"><span></span><span></span><span></span><span class="sr-only" data-i18n="nav.menu">Menú</span></button>
+      <div class="nav-menu" id="menu-principal">
+        <a href="#tienda" class="nav-link caps" data-i18n="nav.tienda">Tienda</a>
+        <a href="#como-comprar" class="nav-link caps" data-i18n="nav.como">Cómo comprar</a>
+        <a href="#personalizados" class="nav-link caps" data-i18n="nav.pers">Personalizados</a>
+        <a href="#sobre-mi" class="nav-link caps" data-i18n="nav.sobre">Sobre mí</a>
+        <div class="idioma">
+          <svg class="idioma-globo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/></svg>
+          <span id="idioma-codigo" aria-hidden="true">ES</span>
+          <svg class="idioma-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          <select id="idioma" aria-label="Idioma" data-i18n-attr="aria-label:idioma.aria">
+            <option value="es" lang="es">Español</option>
+            <option value="en" lang="en">English</option>
+            <option value="pt" lang="pt">Português</option>
+            <option value="fr" lang="fr">Français</option>
+            <option value="de" lang="de">Deutsch</option>
+            <option value="ja" lang="ja">日本語</option>
+          </select>
+        </div>
+      </div>
+      <div class="selector moneda" role="group" aria-label="Moneda de los precios" data-i18n-attr="aria-label:moneda.aria">
+        <button type="button" data-moneda="clp" aria-pressed="true">CLP</button>
+        <button type="button" data-moneda="usd" aria-pressed="false">USD</button>
+      </div>
+      <a href="#lista" class="btn btn-primario btn-sm nav-lista"><svg class="icono-carrito" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l2.6 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.5L21 7H6.2"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="17.5" cy="20" r="1.4" fill="currentColor"/></svg><span class="sr-only" data-i18n="carrito.titulo">Carrito</span><span class="contador" id="contador">0</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="inicio" class="wrap hero">
+  <div class="hero-texto">
+    <p class="kicker caps" data-i18n="hero.kicker">CATÁLOGO DE PRODUCTOS — Stickers · llaveros · merch</p>
+    <h1 data-i18n="hero.titulo">DIBUJOS QUE NACEN DE LO QUE <span class="acento">AMO</span></h1>
+    <p class="hero-intro" data-i18n="hero.intro">Hola, soy Carime. Dibujo por gusto los personajes que me inspiran, ya sean fanarts de anime y cultura pop o personajes propios. Aquí los encontrarás en formato de merch, con la esperanza de que también te inspiren. Todos estos productos están hechos por mis dos manitos. Date una vuelta, y si quieres conversar sobre alguno, escríbeme por Instagram.</p>
+    <div class="acciones">
+      <a href="#tienda" class="btn btn-primario" data-i18n="hero.ver">Ver la tienda</a>
+      <a href="https://ig.me/m/carimejackson_art" target="_blank" rel="noopener" class="btn btn-borde" data-i18n="hero.ig">Escríbeme por Instagram</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="avatar">
+      <img src="assets/ilustraciones/chibi-avatar.webp" alt="Autorretrato chibi de Caro dibujado a lápiz" data-i18n-attr="alt:hero.avatar" width="1680" height="1880">
+    </div>
+  </div>
+</section>
+
+<section id="como-comprar" class="seccion-suave">
+  <div class="wrap" style="display:flex;flex-direction:column;gap:32px;">
+    <h2 style="text-align:center;" data-i18n="como.titulo">Cómo comprar</h2>
+    <ol class="pasos">
+      <li class="tarjeta paso">
+        <span class="paso-num" aria-hidden="true">1</span>
+        <span class="paso-titulo caps" data-i18n="como.p1t">Elige</span>
+        <span data-i18n="como.p1d">Revisa la tienda y agrega a tu carrito lo que te guste. El stock está al día.</span>
+      </li>
+      <li class="tarjeta paso">
+        <span class="paso-num" aria-hidden="true">2</span>
+        <span class="paso-titulo caps" data-i18n="como.p2t">Copia tu pedido</span>
+        <span data-i18n="como.p2d">Tu carrito calcula solo las promos por pack. Cópiala con un toque.</span>
+      </li>
+      <li class="tarjeta paso">
+        <span class="paso-num" aria-hidden="true">3</span>
+        <span class="paso-titulo caps" data-i18n="como.p3t">Escríbeme</span>
+        <span data-i18n="como.p3d">Pégala en un mensaje a @carimejackson_art y coordinamos la entrega.</span>
+      </li>
+    </ol>
+    <div class="promos" id="promos" hidden>
+      <span class="caps" style="font-size:12px;font-weight:700;margin-right:6px;" data-i18n="promos.label">Promos por pack:</span>
+    </div>
+  </div>
+</section>
+
+<section id="tienda" class="wrap" style="display:flex;flex-direction:column;gap:28px;">
+  <div class="tienda-head">
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <h2 data-i18n="tienda.titulo">Tienda</h2>
+      <p style="margin:0;font-size:15px;" data-i18n="tienda.sub">Conectada a mi inventario: precios y stock se actualizan solos.</p>
+    </div>
+    <div class="controles">
+      <div class="campo">
+        <label for="buscar" class="caps" data-i18n="tienda.buscar">Buscar</label>
+        <div class="buscador">
+          <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+          <input id="buscar" class="input" type="search" placeholder="Nezuko, Pokémon, Frieren…" autocomplete="off">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="categoria" class="caps" data-i18n="tienda.cats">Categoría</label>
+        <select id="categoria" class="input"></select>
+      </div>
+      <div class="campo">
+        <label for="orden" class="caps" data-i18n="tienda.ordenar">Ordenar</label>
+        <select id="orden" class="input">
+          <option value="destacados" data-i18n="orden.dest">Destacados</option>
+          <option value="precio-asc" data-i18n="orden.asc">Precio: menor a mayor</option>
+          <option value="precio-desc" data-i18n="orden.desc">Precio: mayor a menor</option>
+          <option value="nombre" data-i18n="orden.nombre">Nombre A–Z</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="tienda-cuerpo">
+    <div class="catalogo">
+      <p id="resultados" aria-live="polite"></p>
+      <div id="cargador" class="cargador" role="status">
+        <img src="assets/logos/corazon-loader.svg" alt="" width="96" height="98">
+        <p data-i18n="tienda.cargando">Cargando catálogo…</p>
+      </div>
+      <div id="estado" class="tarjeta estado" hidden></div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <aside id="lista" class="tarjeta lista" aria-label="Carrito" data-i18n-attr="aria-label:carrito.titulo">
+      <h2 style="display:flex;align-items:center;gap:10px;"><svg class="icono-carrito" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l2.6 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 1.9-1.5L21 7H6.2"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="17.5" cy="20" r="1.4" fill="currentColor"/></svg><span data-i18n="carrito.titulo">Carrito</span></h2>
+      <p id="lista-vacia" data-i18n="carrito.vacia">Todavía está vacía. Toca «Agregar» en lo que te guste y aquí verás el total con las promos ya aplicadas.</p>
+      <div id="lista-llena" hidden style="display:flex;flex-direction:column;gap:16px;">
+        <ul id="lista-items"></ul>
+        <div class="totales">
+          <div><span data-i18n="carrito.subtotal">Subtotal</span><span id="subtotal"></span></div>
+          <div id="fila-ahorro"><span data-i18n="carrito.ahorro">Ahorro por packs</span><span id="ahorro"></span></div>
+          <div class="total"><span data-i18n="carrito.total">Total</span><span id="total"></span></div>
+        </div>
+        <button type="button" class="btn btn-primario btn-full" id="copiar">Copiar pedido</button>
+        <a href="https://ig.me/m/carimejackson_art" target="_blank" rel="noopener" class="btn btn-borde btn-full">
+          <span class="icono icono-instagram icono-md" aria-hidden="true"></span>
+          <span data-i18n="carrito.enviar">Enviar por Instagram</span>
+        </a>
+        <p class="nota" data-i18n="carrito.nota">Copia tu pedido y pégalo en el mensaje. Coordinamos la entrega por ahí.</p>
+      </div>
+      <p class="aviso-pedido" data-i18n="carrito.aviso">El pedido está sujeto a la coordinación de pago y entrega que se acuerde por Instagram.</p>
+    </aside>
+  </div>
+</section>
+
+<section id="personalizados" class="seccion-oscura">
+  <div class="wrap encargos">
+    <div class="encargos-head">
+      <div class="col">
+        <h2 data-i18n="pers.titulo">Ilustraciones personalizadas</h2>
+        <p data-i18n="pers.intro">Chibis, pinturas, portadas y más: tus personajes cobran vida. Elige el estilo y te dibujo lo que imagines.</p>
+      </div>
+      <a href="https://ig.me/m/carimejackson_art" target="_blank" rel="noopener" class="btn btn-primario" data-i18n="pers.pedir">Pedir un encargo</a>
+    </div>
+
+    <ul class="servicios">
+      <li class="tarjeta servicio">
+        <div class="servicio-img"><img src="assets/personalizados/chibi.webp" data-i18n-attr="alt:chibi.alt" alt="Ejemplo de chibi: personaje con cabeza de brote verde saltando" width="411" height="640" loading="lazy"></div>
+        <span class="servicio-tag caps" data-i18n="chibi.tag">Chibi</span>
+        <p class="servicio-precio" data-clp="10000">$ 10.000</p>
+        <h3 data-i18n="chibi.titulo">Cualquier personaje, versión tierna</h3>
+        <p data-i18n="chibi.desc">Ideal para stickers, perfiles y coleccionar. Por personaje.</p>
+        <span class="extra caps"><span data-i18n="serv.adicional">Personaje adicional</span> · <span data-clp="5000">$ 5.000</span></span>
+      </li>
+      <li class="tarjeta servicio">
+        <div class="servicio-img"><img src="assets/personalizados/carita.webp" data-i18n-attr="alt:carita.alt" alt="Ejemplo de carita: cara chibi de un chico pelirrojo llorando" width="640" height="587" loading="lazy"></div>
+        <span class="servicio-tag caps" data-i18n="carita.tag">Carita</span>
+        <p class="servicio-precio" data-clp="5000">$ 5.000</p>
+        <h3 data-i18n="carita.titulo">Cualquier personaje, solo cara</h3>
+        <p data-i18n="carita.desc">En estilo chibi o caricatura en mis estilos, sin realismo.</p>
+      </li>
+      <li class="tarjeta servicio">
+        <div class="servicio-img plano"><img src="assets/personalizados/lineart.webp" data-i18n-attr="alt:lineart.alt" alt="Ejemplo de lineart: Charizard en líneas color vino" width="506" height="640" loading="lazy"></div>
+        <span class="servicio-tag caps" data-i18n="lineart.tag">Lineart</span>
+        <p class="servicio-precio" data-clp="10000">$ 10.000</p>
+        <h3 data-i18n="serv.cualquier">Cualquier personaje</h3>
+        <p data-i18n="lineart.desc">Ideal para colorear.</p>
+        <span class="extra caps"><span data-i18n="serv.adicional">Personaje adicional</span> · <span data-clp="5000">$ 5.000</span></span>
+      </li>
+      <li class="tarjeta servicio">
+        <div class="servicio-img plano"><img src="assets/personalizados/acuarela.webp" data-i18n-attr="alt:acuarela.alt" alt="Ejemplo de ilustración tipo acuarela: chica abrazando a un gato" width="506" height="640" loading="lazy"></div>
+        <span class="servicio-tag caps" data-i18n="acuarela.tag">Tipo acuarela</span>
+        <p class="servicio-precio" data-clp="20000">$ 20.000</p>
+        <h3 data-i18n="serv.cualquier">Cualquier personaje</h3>
+        <p data-i18n="acuarela.desc">Ideal para postales, impresiones y portadas de libretas.</p>
+        <span class="extra caps"><span data-i18n="serv.adicional">Personaje adicional</span> · <span data-clp="10000">$ 10.000</span></span>
+      </li>
+      <li class="tarjeta servicio">
+        <div class="servicio-img"><img src="assets/personalizados/semi-realismo.webp" data-i18n-attr="alt:semi.alt" alt="Ejemplo de semi realismo: retrato de un chico con abrigo oscuro sobre fondo rosado" width="516" height="640" loading="lazy"></div>
+        <span class="servicio-tag caps" data-i18n="semi.tag">Semi realismo</span>
+        <p class="servicio-precio" data-clp="30000">$ 30.000</p>
+        <h3 data-i18n="serv.cualquier">Cualquier personaje</h3>
+        <p data-i18n="semi.desc">De busto hacia arriba. Colores dramáticos, <strong>no realistas</strong>.</p>
+        <span class="extra caps" data-i18n="semi.especial">Precio especial de comisión</span>
+        <span class="extra caps"><span data-i18n="serv.adicional">Personaje adicional</span> · <span data-clp="10000">$ 10.000</span></span>
+      </li>
+    </ul>
+
+    <div class="tarjeta editorial">
+      <div class="col">
+        <p class="mano acento editorial-kicker" data-i18n="ed.kicker">Para tu libro</p>
+        <h3 data-i18n="ed.titulo">Trabajo editorial</h3>
+        <p data-i18n="ed.desc">También hago trabajo editorial. Estos trabajos funcionan un poco distinto: tienen que ser situaciones y personajes originales, <strong>no fanart</strong>. A la hora de publicar el contenido en la obra, se firma un contrato de autorización de permisos de distribución y reventa.</p>
+        <p class="nota" data-i18n="ed.nota">Portadas y páginas interiores listas para publicar.</p>
+      </div>
+      <ul class="editorial-precios">
+        <li><img src="assets/personalizados/editorial-portada.webp" data-i18n-attr="alt:ed.portada.alt" alt="Portada del libro La marca del Destino: Fuego, de Nathalie Álvarez Ricartes" width="386" height="545" loading="lazy"><span class="caps" data-i18n="ed.portada">Portada</span><strong data-clp="100000">$ 100.000</strong></li>
+        <li><img src="assets/personalizados/editorial-ilustracion.webp" data-i18n-attr="alt:ed.ilus.alt" alt="Ilustración interior: una caja torácica dorada flotando en un cielo estrellado" width="429" height="542" loading="lazy"><span class="caps" data-i18n="ed.ilus">Ilustración</span><strong data-clp="50000">$ 50.000</strong></li>
+        <li><img src="assets/personalizados/editorial-maquetacion.webp" data-i18n-attr="alt:ed.maq.alt" alt="Página maquetada del capítulo 3, Marcados" width="378" height="589" loading="lazy"><span class="caps" data-i18n="ed.maq">Maquetación</span><strong><span data-clp="200">$ 200</span> <span data-i18n="ed.pag">/ pág.</span></strong></li>
+      </ul>
+    </div>
+
+    <h3 class="encargos-sub" data-i18n="trabajo.titulo">Cómo trabajo</h3>
+    <ul class="pasos">
+      <li class="tarjeta paso"><span class="paso-titulo caps acento" data-i18n="trabajo.t1">Cupos limitados</span><p data-i18n="trabajo.d1">Se reservan por orden de llegada.</p></li>
+      <li class="tarjeta paso"><span class="paso-titulo caps acento" data-i18n="trabajo.t2">50% anticipo</span><p data-i18n="trabajo.d2">Se paga por adelantado para reservar tu cupo.</p></li>
+      <li class="tarjeta paso"><span class="paso-titulo caps acento" data-i18n="trabajo.t3">Bosquejo + paleta</span><p data-i18n="trabajo.d3">Todo parte con tu aprobación antes de avanzar. Partimos por el boceto y la paleta, y vas recibiendo distintos avances.</p></li>
+      <li class="tarjeta paso"><span class="paso-titulo caps acento" data-i18n="trabajo.t4">50% al final</span><p data-i18n="trabajo.d4">Al terminar te envío una foto en baja resolución de la imagen, contra la que se paga. Luego te envío la imagen en alta.</p></li>
+      <li class="tarjeta paso"><span class="paso-titulo caps acento" data-i18n="trabajo.t5">No incluye licencia comercial</span><p data-i18n="trabajo.d5"><strong>Salvo</strong> el trabajo editorial, estas comisiones <strong>no</strong> incluyen permiso para revender o hacer productos comercializables con ellas. <strong>Son para tu uso personal.</strong></p></li>
+      <li class="tarjeta paso"><span class="paso-titulo caps acento" data-i18n="trabajo.t6">No incluye editables</span><p data-i18n="trabajo.d6">En ningún caso se incluye la entrega de formatos editables. Solo la imagen o el libro final.</p></li>
+    </ul>
+
+    <div class="encargos-pie">
+      <div class="col">
+        <h3 class="encargos-sub" data-i18n="cond.titulo">Condiciones adicionales</h3>
+        <ol class="condiciones">
+          <li data-i18n="cond.1">Al solicitar alguna de mis ilustraciones, <strong>aceptas</strong> que trabajaré en los estilos que manejo.</li>
+          <li data-i18n="cond.2">Esta cuenta, así como mi trabajo, es “family friendly”. Por eso <strong>no se aceptan</strong> solicitudes con alto contenido sexual o explícito, contenido político, ni contenido violento o que incite a la violencia.</li>
+        </ol>
+      </div>
+      <div class="panel">
+        <p class="caps"><strong data-i18n="pago.titulo">Métodos de pago</strong></p>
+        <p data-i18n="pago.metodos">Transferencia bancaria chilena · PayPal</p>
+        <p data-i18n="pago.dm">¿No sabes cómo reservar tu cupo? Escríbeme por DM a <strong>@carimejackson_art</strong>.</p>
+        <a href="https://ig.me/m/carimejackson_art" target="_blank" rel="noopener" class="btn btn-primario">
+          <span class="icono icono-instagram icono-md" aria-hidden="true"></span>
+          <span data-i18n="pago.reservar">Reservar mi cupo</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre-mi" class="wrap dos-col sobre">
+  <div class="sobre-visual">
+    <img src="assets/ilustraciones/paintings-banner-640.webp"
+         srcset="assets/ilustraciones/paintings-banner-320.webp 320w, assets/ilustraciones/paintings-banner-480.webp 480w, assets/ilustraciones/paintings-banner-640.webp 640w, assets/ilustraciones/paintings-banner-960.webp 960w"
+         sizes="(max-width:820px) 100vw, 320px"
+         data-i18n-attr="alt:sobre.alt" alt="Collage de pinturas semirrealistas de Carime Jackson" width="2523" height="9178" loading="lazy">
+  </div>
+  <div class="col" style="flex:999 1 480px;">
+    <h2 data-i18n="sobre.titulo">Sobre mí</h2>
+    <div class="sobre-texto">
+      <p data-i18n="sobre.p1">Dibujo desde siempre, en mis tiempos libres y por puro gusto. Ahí aparecen los personajes que me inspiran: a veces fanarts de mis series, animes y libros favoritos; otras, personajes míos.</p>
+      <p data-i18n="sobre.p2">Cada día intento simplificar mi vida y verle el lado positivo a las cosas, y mis chibis han sido mi pequeña terapia. Me divierten, me relajan y casi siempre me sacan una risa.</p>
+      <p data-i18n="sobre.p3">Al mismo tiempo, me tomo en serio la ilustración. Practico constantemente para mejorar mi técnica y expresar mis ideas con más confianza, y ese camino me llevó a un estilo más dramático, el de mis pinturas semirrealistas.</p>
+      <p data-i18n="sobre.p4">También escribo. De chica partí con fanfictions, fui aprendiendo con cada uno y hoy tengo mi propia novela publicada: <strong>Almaaz</strong>. De esas historias, publicadas o todavía guardadas, nacen la mayoría de mis personajes originales.</p>
+      <p data-i18n="sobre.p5">Lo que me mueve hoy es compartir todo esto con más personas. Puede ser que un sticker te recuerde a tu personaje favorito, o que encuentres aquí un espacio para expresarte y seguir creciendo, igual que lo busco yo.</p>
+    </div>
+    <p class="mano frase-final" data-i18n="sobre.frase">Y si algo quiero recordarte, es esto: <span class="acento">tu estilo nace cuando dejas de corregirte tanto.</span></p>
+  </div>
+</section>
+</main>
+
+<dialog id="detalle" class="detalle" aria-labelledby="detalle-nombre">
+  <div class="detalle-nav">
+    <button type="button" class="flecha flecha-prev" id="detalle-prev" aria-label="Producto anterior" data-i18n-attr="aria-label:detalle.prev"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="detalle-in">
+      <button type="button" class="cerrar" id="cerrar-detalle" aria-label="Cerrar" data-i18n-attr="aria-label:detalle.cerrar">×</button>
+      <div class="detalle-foto" id="detalle-foto"></div>
+      <div class="detalle-info" id="detalle-info"></div>
+    </div>
+    <button type="button" class="flecha flecha-next" id="detalle-next" aria-label="Producto siguiente" data-i18n-attr="aria-label:detalle.next"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</dialog>
+
+<footer>
+  <div class="footer-in">
+    <div class="footer-col">
+      <img class="footer-logo" src="assets/logos/logo-secundario-blanco.svg" alt="Carime Jackson" width="149" height="72" loading="lazy">
+      <span class="caps" style="font-size:12px;" data-i18n="footer.lugar">Ilustración · Concepción, Chile</span>
+    </div>
+    <div class="footer-col">
+      <span class="titulo caps" data-i18n="footer.sigueme">Sígueme en:</span>
+      <a class="red caps" href="https://instagram.com/carimejackson" target="_blank" rel="noopener"><span class="icono icono-instagram" aria-hidden="true"></span>@carimejackson</a>
+      <a class="red caps" href="https://instagram.com/carimejackson_art" target="_blank" rel="noopener"><span class="icono icono-instagram" aria-hidden="true"></span>@carimejackson_art</a>
+      <a class="red caps" href="https://www.deviantart.com/carimej" target="_blank" rel="noopener"><span class="icono icono-web" aria-hidden="true"></span>deviantart.com/carimej</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Traducciones. El español de los textos fijos vive en el HTML (data-i18n / data-i18n-attr);
+// aquí en "es" solo van los textos que arma el JS. {n}, {nombre}, etc. se reemplazan al usarlos.
+const I18N = {
+  es: {
+    "todo": "Todo",
+    "stock.sin": "Sin stock por ahora",
+    "stock.quedan": "¡Quedan {n}!",
+    "stock.disp": "{n} disponibles",
+    "avisame": "Avísame cuando vuelva",
+    "menosUno": "Quitar uno de {nombre}",
+    "enCarrito": "{n} en tu carrito",
+    "masUno": "Agregar otro de {nombre}",
+    "agregarAria": "Agregar {nombre} al carrito",
+    "agregar": "Agregar",
+    "producto1": "1 producto",
+    "productosN": "{n} productos",
+    "sinResultados": "No encontré nada con esos filtros.",
+    "limpiar": "Limpiar filtros",
+    "verGrande": "Ver {nombre} en grande",
+    "agotado": "Agotado",
+    "quitarAria": "Quitar {nombre} del carrito",
+    "quitar": "Quitar",
+    "copiar": "Copiar pedido",
+    "copiado": "Pedido copiado",
+    "copiaPrompt": "Copia tu pedido:",
+    "msg.saludo": "Hola Carime, quiero pedir:",
+    "msg.total": "Total con promos:",
+    "pos": "{i} de {n}",
+    "cu": "c/u",
+    "promoPack": "Promo por pack",
+    "promoDetalle": "Sale a {precio} c/u. Puedes combinar cualquier producto de {cat}; tu carrito aplica la promo solo.",
+    "errorCatalogo": "No pude cargar el catálogo en este momento.",
+    "preguntame": "Pregúntame por Instagram",
+    cat: {}
+  },
+
+  en: {
+    "meta.title": "Carime Jackson — Stickers, illustration & merch",
+    "meta.desc": "Anime and pop culture stickers, keychains and merch, handmade by Caro in Concepción, Chile.",
+    "logo.alt": "Carime Jackson, home",
+    "nav.aria": "Main",
+    "nav.menu": "Menu",
+    "nav.tienda": "Shop",
+    "nav.como": "How to buy",
+    "nav.pers": "Commissions",
+    "nav.sobre": "About me",
+    "idioma.aria": "Language",
+    "moneda.aria": "Price currency",
+    "carrito.titulo": "Cart",
+    "hero.kicker": "PRODUCT CATALOG — Stickers · keychains · merch",
+    "hero.titulo": "DRAWINGS BORN FROM WHAT I <span class='acento'>LOVE</span>",
+    "hero.intro": "Hi, I'm Carime. I draw the characters that inspire me just for the joy of it, whether they're anime and pop culture fanart or my own original characters. Here you'll find them as merch, in the hope that they inspire you too. Every one of these products is made by my own two little hands. Take a look around, and if you'd like to chat about any of them, message me on Instagram.",
+    "hero.ver": "See the shop",
+    "hero.ig": "Message me on Instagram",
+    "hero.avatar": "Chibi self-portrait of Caro drawn in pencil",
+    "como.titulo": "How to buy",
+    "como.p1t": "Choose",
+    "como.p1d": "Browse the shop and add whatever you like to your cart. Stock is always up to date.",
+    "como.p2t": "Copy your order",
+    "como.p2d": "Your cart works out the pack deals on its own. Copy it with one tap.",
+    "como.p3t": "Message me",
+    "como.p3d": "Paste it into a message to @carimejackson_art and we'll arrange delivery.",
+    "promos.label": "Pack deals:",
+    "tienda.titulo": "Shop",
+    "tienda.sub": "Connected to my inventory: prices and stock update automatically.",
+    "tienda.buscar": "Search",
+    "tienda.ordenar": "Sort by",
+    "orden.dest": "Featured",
+    "orden.asc": "Price: low to high",
+    "orden.desc": "Price: high to low",
+    "orden.nombre": "Name A–Z",
+    "tienda.cats": "Category",
+    "tienda.cargando": "Loading catalog…",
+    "carrito.vacia": "It's still empty. Tap “Add” on anything you like and you'll see the total here with pack deals already applied.",
+    "carrito.subtotal": "Subtotal",
+    "carrito.ahorro": "Pack savings",
+    "carrito.total": "Total",
+    "carrito.enviar": "Send via Instagram",
+    "carrito.aviso": "Your order is subject to the payment and delivery arrangements we agree on via Instagram.",
+    "carrito.nota": "Copy your order and paste it into the message. We'll arrange delivery there.",
+    "pers.titulo": "Custom illustrations",
+    "pers.intro": "Chibis, paintings, covers and more: bring your characters to life. Pick a style and I'll draw whatever you imagine.",
+    "pers.pedir": "Request a commission",
+    "serv.adicional": "Additional character",
+    "serv.cualquier": "Any character",
+    "chibi.alt": "Chibi example: a character with a green sprout for a head, jumping",
+    "chibi.tag": "Chibi",
+    "chibi.titulo": "Any character, cute version",
+    "chibi.desc": "Perfect for stickers, profile pictures and collecting. Per character.",
+    "carita.alt": "Face example: chibi face of a crying red-haired boy",
+    "carita.tag": "Face",
+    "carita.titulo": "Any character, face only",
+    "carita.desc": "Chibi or cartoon, in my own styles, no realism.",
+    "lineart.alt": "Lineart example: Charizard in wine-colored lines",
+    "lineart.tag": "Lineart",
+    "lineart.desc": "Perfect for coloring.",
+    "acuarela.alt": "Watercolor-style example: a girl hugging a cat",
+    "acuarela.tag": "Watercolor style",
+    "acuarela.desc": "Perfect for postcards, prints and notebook covers.",
+    "semi.alt": "Semi-realism example: portrait of a boy in a dark coat on a pink background",
+    "semi.tag": "Semi-realism",
+    "semi.desc": "Bust up. Dramatic, <strong>non-realistic</strong> colors.",
+    "semi.especial": "Special commission price",
+    "ed.kicker": "For your book",
+    "ed.titulo": "Editorial work",
+    "ed.desc": "I also do editorial work. These jobs work a little differently: they have to be original situations and characters, <strong>not fanart</strong>. When the content is published in the book, we sign a contract authorizing distribution and resale rights.",
+    "ed.nota": "Covers and interior pages ready to publish.",
+    "ed.portada.alt": "Cover of the book La marca del Destino: Fuego, by Nathalie Álvarez Ricartes",
+    "ed.portada": "Cover",
+    "ed.ilus.alt": "Interior illustration: a golden rib cage floating in a starry sky",
+    "ed.ilus": "Illustration",
+    "ed.maq.alt": "Typeset page from chapter 3, Marcados",
+    "ed.maq": "Layout",
+    "ed.pag": "/ page",
+    "trabajo.titulo": "How I work",
+    "trabajo.t1": "Limited slots",
+    "trabajo.d1": "Booked on a first-come, first-served basis.",
+    "trabajo.t2": "50% deposit",
+    "trabajo.d2": "Paid upfront to book your slot.",
+    "trabajo.t3": "Sketch + palette",
+    "trabajo.d3": "Nothing moves forward without your approval. We start with the sketch and the color palette, and you'll receive progress updates along the way.",
+    "trabajo.t4": "50% at the end",
+    "trabajo.d4": "When it's done I'll send you a low-resolution photo of the image, and you pay the balance against it. Then I'll send you the high-resolution image.",
+    "trabajo.t5": "No commercial license",
+    "trabajo.d5": "<strong>Except</strong> for editorial work, these commissions do <strong>not</strong> include permission to resell them or make sellable products with them. <strong>They're for your personal use.</strong>",
+    "trabajo.t6": "No editable files",
+    "trabajo.d6": "Editable formats are never included. Only the final image or book.",
+    "cond.titulo": "Additional terms",
+    "cond.1": "By requesting one of my illustrations, you <strong>agree</strong> that I'll work in the styles I do.",
+    "cond.2": "This account, like my work, is “family friendly”. That's why I <strong>don't accept</strong> requests with strong sexual or explicit content, political content, or violent content or content that incites violence.",
+    "pago.titulo": "Payment methods",
+    "pago.metodos": "Chilean bank transfer · PayPal",
+    "pago.dm": "Not sure how to book your slot? Send me a DM at <strong>@carimejackson_art</strong>.",
+    "pago.reservar": "Book my slot",
+    "sobre.alt": "Collage of semi-realistic paintings by Carime Jackson",
+    "sobre.titulo": "About me",
+    "sobre.p1": "I've always drawn, in my free time and purely for fun. That's where the characters that inspire me show up: sometimes fanart of my favorite series, anime and books; other times, my own characters.",
+    "sobre.p2": "Every day I try to keep life simple and look on the bright side, and my chibis have been my little therapy. They amuse me, relax me and almost always make me laugh.",
+    "sobre.p3": "At the same time, I take illustration seriously. I practice constantly to improve my technique and express my ideas with more confidence, and that path led me to a more dramatic style: my semi-realistic paintings.",
+    "sobre.p4": "I also write. I started with fanfiction as a kid, learned something from each one, and today I have my own published novel: <strong>Almaaz</strong>. Most of my original characters come from those stories, published or still tucked away.",
+    "sobre.p5": "What drives me today is sharing all of this with more people. Maybe a sticker will remind you of your favorite character, or maybe you'll find a space here to express yourself and keep growing, just like I'm looking for.",
+    "sobre.frase": "And if there's one thing I want to remind you of, it's this: <span class='acento'>your style is born when you stop correcting yourself so much.</span>",
+    "detalle.prev": "Previous product",
+    "detalle.next": "Next product",
+    "detalle.cerrar": "Close",
+    "footer.lugar": "Illustration · Concepción, Chile",
+    "footer.sigueme": "Follow me on:",
+    "todo": "All",
+    "stock.sin": "Out of stock for now",
+    "stock.quedan": "Only {n} left!",
+    "stock.disp": "{n} available",
+    "avisame": "Let me know when it's back",
+    "menosUno": "Remove one {nombre}",
+    "enCarrito": "{n} in your cart",
+    "masUno": "Add another {nombre}",
+    "agregarAria": "Add {nombre} to cart",
+    "agregar": "Add",
+    "producto1": "1 product",
+    "productosN": "{n} products",
+    "sinResultados": "I couldn't find anything with those filters.",
+    "limpiar": "Clear filters",
+    "verGrande": "View {nombre} larger",
+    "agotado": "Sold out",
+    "quitarAria": "Remove {nombre} from cart",
+    "quitar": "Remove",
+    "copiar": "Copy order",
+    "copiado": "Order copied",
+    "copiaPrompt": "Copy your order:",
+    "msg.saludo": "Hi Carime, I'd like to order:",
+    "msg.total": "Total with deals:",
+    "pos": "{i} of {n}",
+    "cu": "each",
+    "promoPack": "Pack deal",
+    "promoDetalle": "Works out to {precio} each. Mix and match any {cat} products; your cart applies the deal automatically.",
+    "errorCatalogo": "I couldn't load the catalog right now.",
+    "preguntame": "Ask me on Instagram",
+    cat: {
+      "Stickers normal": "Stickers",
+      "Stickers holográficos": "Holographic",
+      "Set Stickers": "Sticker sets",
+      "Marca páginas": "Bookmarks",
+      "Album stickers": "Sticker album",
+      "Lienzo pintable 25x18": "Paintable canvases",
+      "Print Carta": "Letter prints",
+      "Print 1/2 Carta": "Half-letter prints",
+      "Print acuarela 18x12": "Watercolor prints"
+    }
+  },
+
+  pt: {
+    "meta.title": "Carime Jackson — Adesivos, ilustração e merch",
+    "meta.desc": "Adesivos, chaveiros e merch de anime e cultura pop feitos à mão pela Caro em Concepción, Chile.",
+    "logo.alt": "Carime Jackson, início",
+    "nav.aria": "Principal",
+    "nav.menu": "Menu",
+    "nav.tienda": "Loja",
+    "nav.como": "Como comprar",
+    "nav.pers": "Personalizados",
+    "nav.sobre": "Sobre mim",
+    "idioma.aria": "Idioma",
+    "moneda.aria": "Moeda dos preços",
+    "carrito.titulo": "Carrinho",
+    "hero.kicker": "CATÁLOGO DE PRODUTOS — Adesivos · chaveiros · merch",
+    "hero.titulo": "DESENHOS QUE NASCEM DO QUE EU <span class='acento'>AMO</span>",
+    "hero.intro": "Oi, eu sou a Carime. Desenho por prazer os personagens que me inspiram, sejam fanarts de anime e cultura pop ou personagens próprios. Aqui você vai encontrá-los em forma de merch, na esperança de que também te inspirem. Todos estes produtos são feitos pelas minhas duas mãozinhas. Dá uma olhada e, se quiser conversar sobre algum, me escreve no Instagram.",
+    "hero.ver": "Ver a loja",
+    "hero.ig": "Me escreve no Instagram",
+    "hero.avatar": "Autorretrato chibi da Caro desenhado a lápis",
+    "como.titulo": "Como comprar",
+    "como.p1t": "Escolha",
+    "como.p1d": "Dá uma olhada na loja e adiciona ao carrinho o que você gostar. O estoque está sempre atualizado.",
+    "como.p2t": "Copie seu pedido",
+    "como.p2d": "Seu carrinho calcula sozinho as promoções por pacote. Copie com um toque.",
+    "como.p3t": "Me escreva",
+    "como.p3d": "Cole numa mensagem para @carimejackson_art e combinamos a entrega.",
+    "promos.label": "Promoções por pacote:",
+    "tienda.titulo": "Loja",
+    "tienda.sub": "Conectada ao meu estoque: preços e disponibilidade se atualizam sozinhos.",
+    "tienda.buscar": "Buscar",
+    "tienda.ordenar": "Ordenar",
+    "orden.dest": "Destaques",
+    "orden.asc": "Preço: menor para maior",
+    "orden.desc": "Preço: maior para menor",
+    "orden.nombre": "Nome A–Z",
+    "tienda.cats": "Categoria",
+    "tienda.cargando": "Carregando catálogo…",
+    "carrito.vacia": "Ainda está vazio. Toque em “Adicionar” no que você gostar e aqui vai ver o total com as promoções já aplicadas.",
+    "carrito.subtotal": "Subtotal",
+    "carrito.ahorro": "Economia por pacotes",
+    "carrito.total": "Total",
+    "carrito.enviar": "Enviar pelo Instagram",
+    "carrito.aviso": "O pedido está sujeito à combinação de pagamento e entrega que fizermos pelo Instagram.",
+    "carrito.nota": "Copie seu pedido e cole na mensagem. Combinamos a entrega por lá.",
+    "pers.titulo": "Ilustrações personalizadas",
+    "pers.intro": "Chibis, pinturas, capas e muito mais: seus personagens ganham vida. Escolha o estilo e eu desenho o que você imaginar.",
+    "pers.pedir": "Pedir uma encomenda",
+    "serv.adicional": "Personagem adicional",
+    "serv.cualquier": "Qualquer personagem",
+    "chibi.alt": "Exemplo de chibi: personagem com cabeça de broto verde pulando",
+    "chibi.tag": "Chibi",
+    "chibi.titulo": "Qualquer personagem, versão fofa",
+    "chibi.desc": "Ideal para adesivos, fotos de perfil e colecionar. Por personagem.",
+    "carita.alt": "Exemplo de carinha: rosto chibi de um menino ruivo chorando",
+    "carita.tag": "Carinha",
+    "carita.titulo": "Qualquer personagem, só o rosto",
+    "carita.desc": "Em estilo chibi ou caricatura, nos meus estilos, sem realismo.",
+    "lineart.alt": "Exemplo de lineart: Charizard em linhas cor de vinho",
+    "lineart.tag": "Lineart",
+    "lineart.desc": "Ideal para colorir.",
+    "acuarela.alt": "Exemplo de ilustração estilo aquarela: menina abraçando um gato",
+    "acuarela.tag": "Estilo aquarela",
+    "acuarela.desc": "Ideal para cartões-postais, impressões e capas de cadernos.",
+    "semi.alt": "Exemplo de semirrealismo: retrato de um menino de casaco escuro sobre fundo rosa",
+    "semi.tag": "Semirrealismo",
+    "semi.desc": "Do busto para cima. Cores dramáticas, <strong>não realistas</strong>.",
+    "semi.especial": "Preço especial de encomenda",
+    "ed.kicker": "Para o seu livro",
+    "ed.titulo": "Trabalho editorial",
+    "ed.desc": "Também faço trabalho editorial. Esses trabalhos funcionam um pouco diferente: precisam ser situações e personagens originais, <strong>não fanart</strong>. Na hora de publicar o conteúdo na obra, assinamos um contrato de autorização de direitos de distribuição e revenda.",
+    "ed.nota": "Capas e páginas internas prontas para publicar.",
+    "ed.portada.alt": "Capa do livro La marca del Destino: Fuego, de Nathalie Álvarez Ricartes",
+    "ed.portada": "Capa",
+    "ed.ilus.alt": "Ilustração interna: uma caixa torácica dourada flutuando num céu estrelado",
+    "ed.ilus": "Ilustração",
+    "ed.maq.alt": "Página diagramada do capítulo 3, Marcados",
+    "ed.maq": "Diagramação",
+    "ed.pag": "/ pág.",
+    "trabajo.titulo": "Como eu trabalho",
+    "trabajo.t1": "Vagas limitadas",
+    "trabajo.d1": "São reservadas por ordem de chegada.",
+    "trabajo.t2": "50% de entrada",
+    "trabajo.d2": "Pago adiantado para reservar sua vaga.",
+    "trabajo.t3": "Esboço + paleta",
+    "trabajo.d3": "Nada avança sem a sua aprovação. Começamos pelo esboço e pela paleta, e você vai recebendo diferentes prévias.",
+    "trabajo.t4": "50% no final",
+    "trabajo.d4": "Ao terminar, te envio uma foto em baixa resolução da imagem, e o restante é pago com base nela. Depois te envio a imagem em alta.",
+    "trabajo.t5": "Não inclui licença comercial",
+    "trabajo.d5": "<strong>Exceto</strong> o trabalho editorial, estas encomendas <strong>não</strong> incluem permissão para revender ou fazer produtos comercializáveis com elas. <strong>São para seu uso pessoal.</strong>",
+    "trabajo.t6": "Não inclui editáveis",
+    "trabajo.d6": "Em nenhum caso são entregues arquivos editáveis. Apenas a imagem ou o livro final.",
+    "cond.titulo": "Condições adicionais",
+    "cond.1": "Ao solicitar alguma das minhas ilustrações, você <strong>aceita</strong> que vou trabalhar nos estilos que domino.",
+    "cond.2": "Esta conta, assim como o meu trabalho, é “family friendly”. Por isso <strong>não são aceitas</strong> solicitações com alto conteúdo sexual ou explícito, conteúdo político, nem conteúdo violento ou que incite à violência.",
+    "pago.titulo": "Formas de pagamento",
+    "pago.metodos": "Transferência bancária chilena · PayPal",
+    "pago.dm": "Não sabe como reservar sua vaga? Me manda uma DM em <strong>@carimejackson_art</strong>.",
+    "pago.reservar": "Reservar minha vaga",
+    "sobre.alt": "Colagem de pinturas semirrealistas de Carime Jackson",
+    "sobre.titulo": "Sobre mim",
+    "sobre.p1": "Desenho desde sempre, nas horas vagas e por puro prazer. É aí que aparecem os personagens que me inspiram: às vezes fanarts das minhas séries, animes e livros favoritos; outras, personagens meus.",
+    "sobre.p2": "Todo dia tento simplificar minha vida e ver o lado positivo das coisas, e meus chibis têm sido minha pequena terapia. Eles me divertem, me relaxam e quase sempre me arrancam uma risada.",
+    "sobre.p3": "Ao mesmo tempo, levo a ilustração a sério. Pratico constantemente para melhorar minha técnica e expressar minhas ideias com mais confiança, e esse caminho me levou a um estilo mais dramático, o das minhas pinturas semirrealistas.",
+    "sobre.p4": "Também escrevo. Comecei com fanfics quando era pequena, fui aprendendo com cada uma e hoje tenho meu próprio romance publicado: <strong>Almaaz</strong>. Dessas histórias, publicadas ou ainda guardadas, nasce a maioria dos meus personagens originais.",
+    "sobre.p5": "O que me move hoje é compartilhar tudo isso com mais pessoas. Pode ser que um adesivo te lembre do seu personagem favorito, ou que você encontre aqui um espaço para se expressar e continuar crescendo, assim como eu busco.",
+    "sobre.frase": "E se eu quero te lembrar de algo, é disto: <span class='acento'>seu estilo nasce quando você para de se corrigir tanto.</span>",
+    "detalle.prev": "Produto anterior",
+    "detalle.next": "Próximo produto",
+    "detalle.cerrar": "Fechar",
+    "footer.lugar": "Ilustração · Concepción, Chile",
+    "footer.sigueme": "Me siga em:",
+    "todo": "Tudo",
+    "stock.sin": "Sem estoque no momento",
+    "stock.quedan": "Só restam {n}!",
+    "stock.disp": "{n} disponíveis",
+    "avisame": "Me avise quando voltar",
+    "menosUno": "Remover um de {nombre}",
+    "enCarrito": "{n} no carrinho",
+    "masUno": "Adicionar mais um de {nombre}",
+    "agregarAria": "Adicionar {nombre} ao carrinho",
+    "agregar": "Adicionar",
+    "producto1": "1 produto",
+    "productosN": "{n} produtos",
+    "sinResultados": "Não encontrei nada com esses filtros.",
+    "limpiar": "Limpar filtros",
+    "verGrande": "Ver {nombre} em tamanho grande",
+    "agotado": "Esgotado",
+    "quitarAria": "Remover {nombre} do carrinho",
+    "quitar": "Remover",
+    "copiar": "Copiar pedido",
+    "copiado": "Pedido copiado",
+    "copiaPrompt": "Copie seu pedido:",
+    "msg.saludo": "Oi Carime, quero pedir:",
+    "msg.total": "Total com promoções:",
+    "pos": "{i} de {n}",
+    "cu": "cada",
+    "promoPack": "Promoção por pacote",
+    "promoDetalle": "Sai a {precio} cada. Você pode combinar qualquer produto de {cat}; seu carrinho aplica a promoção sozinho.",
+    "errorCatalogo": "Não consegui carregar o catálogo agora.",
+    "preguntame": "Me pergunte no Instagram",
+    cat: {
+      "Stickers normal": "Adesivos",
+      "Stickers holográficos": "Holográficos",
+      "Set Stickers": "Kits de adesivos",
+      "Marca páginas": "Marcadores de página",
+      "Album stickers": "Álbum de adesivos",
+      "Lienzo pintable 25x18": "Telas para pintar",
+      "Print Carta": "Prints carta",
+      "Print 1/2 Carta": "Prints ½ carta",
+      "Print acuarela 18x12": "Prints aquarela"
+    }
+  },
+
+  fr: {
+    "meta.title": "Carime Jackson — Stickers, illustration et merch",
+    "meta.desc": "Stickers, porte-clés et merch d'anime et de pop culture faits main par Caro à Concepción, au Chili.",
+    "logo.alt": "Carime Jackson, accueil",
+    "nav.aria": "Principale",
+    "nav.menu": "Menu",
+    "nav.tienda": "Boutique",
+    "nav.como": "Comment acheter",
+    "nav.pers": "Commandes perso",
+    "nav.sobre": "À propos",
+    "idioma.aria": "Langue",
+    "moneda.aria": "Devise des prix",
+    "carrito.titulo": "Panier",
+    "hero.kicker": "CATALOGUE — Stickers · porte-clés · merch",
+    "hero.titulo": "DES DESSINS NÉS DE CE QUE <span class='acento'>J'AIME</span>",
+    "hero.intro": "Salut, moi c'est Carime. Je dessine par plaisir les personnages qui m'inspirent, qu'il s'agisse de fanarts d'anime et de pop culture ou de mes propres personnages. Tu les trouveras ici sous forme de merch, en espérant qu'ils t'inspirent aussi. Tous ces produits sont faits de mes deux petites mains. Fais un tour, et si tu veux discuter de l'un d'eux, écris-moi sur Instagram.",
+    "hero.ver": "Voir la boutique",
+    "hero.ig": "M'écrire sur Instagram",
+    "hero.avatar": "Autoportrait chibi de Caro dessiné au crayon",
+    "como.titulo": "Comment acheter",
+    "como.p1t": "Choisis",
+    "como.p1d": "Parcours la boutique et ajoute à ton panier ce qui te plaît. Le stock est toujours à jour.",
+    "como.p2t": "Copie ta commande",
+    "como.p2d": "Ton panier calcule tout seul les promos par lot. Copie-la en un clic.",
+    "como.p3t": "Écris-moi",
+    "como.p3d": "Colle-la dans un message à @carimejackson_art et on organise la livraison.",
+    "promos.label": "Promos par lot :",
+    "tienda.titulo": "Boutique",
+    "tienda.sub": "Connectée à mon inventaire : les prix et le stock se mettent à jour tout seuls.",
+    "tienda.buscar": "Rechercher",
+    "tienda.ordenar": "Trier",
+    "orden.dest": "En vedette",
+    "orden.asc": "Prix : croissant",
+    "orden.desc": "Prix : décroissant",
+    "orden.nombre": "Nom A–Z",
+    "tienda.cats": "Catégorie",
+    "tienda.cargando": "Chargement du catalogue…",
+    "carrito.vacia": "Il est encore vide. Touche « Ajouter » sur ce qui te plaît et tu verras ici le total avec les promos déjà appliquées.",
+    "carrito.subtotal": "Sous-total",
+    "carrito.ahorro": "Économie par lots",
+    "carrito.total": "Total",
+    "carrito.enviar": "Envoyer sur Instagram",
+    "carrito.aviso": "La commande dépend des modalités de paiement et de livraison convenues sur Instagram.",
+    "carrito.nota": "Copie ta commande et colle-la dans le message. On organise la livraison par là.",
+    "pers.titulo": "Illustrations personnalisées",
+    "pers.intro": "Chibis, peintures, couvertures et plus encore : tes personnages prennent vie. Choisis le style et je dessine ce que tu imagines.",
+    "pers.pedir": "Passer une commande",
+    "serv.adicional": "Personnage supplémentaire",
+    "serv.cualquier": "N'importe quel personnage",
+    "chibi.alt": "Exemple de chibi : personnage avec une pousse verte en guise de tête, en train de sauter",
+    "chibi.tag": "Chibi",
+    "chibi.titulo": "N'importe quel personnage, version mignonne",
+    "chibi.desc": "Idéal pour des stickers, des photos de profil et pour collectionner. Par personnage.",
+    "carita.alt": "Exemple de visage : visage chibi d'un garçon roux qui pleure",
+    "carita.tag": "Visage",
+    "carita.titulo": "N'importe quel personnage, visage seul",
+    "carita.desc": "En style chibi ou caricature, dans mes styles, sans réalisme.",
+    "lineart.alt": "Exemple de lineart : Dracaufeu en lignes couleur bordeaux",
+    "lineart.tag": "Lineart",
+    "lineart.desc": "Idéal à colorier.",
+    "acuarela.alt": "Exemple d'illustration façon aquarelle : une fille qui serre un chat dans ses bras",
+    "acuarela.tag": "Façon aquarelle",
+    "acuarela.desc": "Idéal pour des cartes postales, des impressions et des couvertures de carnets.",
+    "semi.alt": "Exemple de semi-réalisme : portrait d'un garçon en manteau sombre sur fond rose",
+    "semi.tag": "Semi-réalisme",
+    "semi.desc": "En buste. Couleurs dramatiques, <strong>non réalistes</strong>.",
+    "semi.especial": "Prix spécial commande",
+    "ed.kicker": "Pour ton livre",
+    "ed.titulo": "Travail éditorial",
+    "ed.desc": "Je fais aussi du travail éditorial. Ces projets fonctionnent un peu différemment : il doit s'agir de situations et de personnages originaux, <strong>pas de fanart</strong>. Au moment de publier le contenu dans l'œuvre, on signe un contrat d'autorisation des droits de diffusion et de revente.",
+    "ed.nota": "Couvertures et pages intérieures prêtes à publier.",
+    "ed.portada.alt": "Couverture du livre La marca del Destino: Fuego, de Nathalie Álvarez Ricartes",
+    "ed.portada": "Couverture",
+    "ed.ilus.alt": "Illustration intérieure : une cage thoracique dorée flottant dans un ciel étoilé",
+    "ed.ilus": "Illustration",
+    "ed.maq.alt": "Page mise en page du chapitre 3, Marcados",
+    "ed.maq": "Mise en page",
+    "ed.pag": "/ page",
+    "trabajo.titulo": "Comment je travaille",
+    "trabajo.t1": "Places limitées",
+    "trabajo.d1": "Réservées par ordre d'arrivée.",
+    "trabajo.t2": "50 % d'acompte",
+    "trabajo.d2": "Payé à l'avance pour réserver ta place.",
+    "trabajo.t3": "Croquis + palette",
+    "trabajo.d3": "Rien n'avance sans ton accord. On commence par le croquis et la palette, et tu reçois différentes étapes en cours de route.",
+    "trabajo.t4": "50 % à la fin",
+    "trabajo.d4": "Une fois terminée, je t'envoie une photo de l'image en basse résolution, contre laquelle tu règles le solde. Ensuite je t'envoie l'image en haute résolution.",
+    "trabajo.t5": "Licence commerciale non incluse",
+    "trabajo.d5": "<strong>Sauf</strong> pour le travail éditorial, ces commandes <strong>n'incluent pas</strong> le droit de les revendre ni d'en faire des produits commercialisables. <strong>Elles sont pour ton usage personnel.</strong>",
+    "trabajo.t6": "Fichiers modifiables non inclus",
+    "trabajo.d6": "Les formats modifiables ne sont jamais fournis. Seulement l'image ou le livre final.",
+    "cond.titulo": "Conditions supplémentaires",
+    "cond.1": "En demandant l'une de mes illustrations, tu <strong>acceptes</strong> que je travaille dans les styles que je maîtrise.",
+    "cond.2": "Ce compte, comme mon travail, est « family friendly ». C'est pourquoi je <strong>n'accepte pas</strong> les demandes à fort contenu sexuel ou explicite, à contenu politique, ni à contenu violent ou incitant à la violence.",
+    "pago.titulo": "Moyens de paiement",
+    "pago.metodos": "Virement bancaire chilien · PayPal",
+    "pago.dm": "Tu ne sais pas comment réserver ta place ? Écris-moi en DM sur <strong>@carimejackson_art</strong>.",
+    "pago.reservar": "Réserver ma place",
+    "sobre.alt": "Collage de peintures semi-réalistes de Carime Jackson",
+    "sobre.titulo": "À propos",
+    "sobre.p1": "Je dessine depuis toujours, pendant mon temps libre et par pur plaisir. C'est là qu'apparaissent les personnages qui m'inspirent : parfois des fanarts de mes séries, animes et livres préférés ; parfois mes propres personnages.",
+    "sobre.p2": "Chaque jour j'essaie de me simplifier la vie et de voir le bon côté des choses, et mes chibis ont été ma petite thérapie. Ils m'amusent, me détendent et me font presque toujours rire.",
+    "sobre.p3": "En même temps, je prends l'illustration au sérieux. Je m'entraîne sans cesse pour améliorer ma technique et exprimer mes idées avec plus d'assurance, et ce chemin m'a menée vers un style plus dramatique : celui de mes peintures semi-réalistes.",
+    "sobre.p4": "J'écris aussi. J'ai commencé petite avec des fanfictions, j'ai appris avec chacune, et aujourd'hui j'ai mon propre roman publié : <strong>Almaaz</strong>. C'est de ces histoires, publiées ou encore dans un tiroir, que naissent la plupart de mes personnages originaux.",
+    "sobre.p5": "Ce qui me motive aujourd'hui, c'est de partager tout ça avec plus de monde. Peut-être qu'un sticker te rappellera ton personnage préféré, ou que tu trouveras ici un espace pour t'exprimer et continuer à grandir, comme je le cherche moi aussi.",
+    "sobre.frase": "Et s'il y a une chose que je veux te rappeler, c'est celle-ci : <span class='acento'>ton style naît quand tu arrêtes de trop te corriger.</span>",
+    "detalle.prev": "Produit précédent",
+    "detalle.next": "Produit suivant",
+    "detalle.cerrar": "Fermer",
+    "footer.lugar": "Illustration · Concepción, Chili",
+    "footer.sigueme": "Suis-moi sur :",
+    "todo": "Tout",
+    "stock.sin": "Rupture de stock pour l'instant",
+    "stock.quedan": "Plus que {n} !",
+    "stock.disp": "{n} disponibles",
+    "avisame": "Préviens-moi quand il revient",
+    "menosUno": "Retirer un {nombre}",
+    "enCarrito": "{n} dans ton panier",
+    "masUno": "Ajouter un autre {nombre}",
+    "agregarAria": "Ajouter {nombre} au panier",
+    "agregar": "Ajouter",
+    "producto1": "1 produit",
+    "productosN": "{n} produits",
+    "sinResultados": "Je n'ai rien trouvé avec ces filtres.",
+    "limpiar": "Effacer les filtres",
+    "verGrande": "Voir {nombre} en grand",
+    "agotado": "Épuisé",
+    "quitarAria": "Retirer {nombre} du panier",
+    "quitar": "Retirer",
+    "copiar": "Copier la commande",
+    "copiado": "Commande copiée",
+    "copiaPrompt": "Copie ta commande :",
+    "msg.saludo": "Bonjour Carime, je voudrais commander :",
+    "msg.total": "Total avec promos :",
+    "pos": "{i} sur {n}",
+    "cu": "l'unité",
+    "promoPack": "Promo par lot",
+    "promoDetalle": "Revient à {precio} l'unité. Tu peux combiner n'importe quels produits de la catégorie {cat} ; ton panier applique la promo tout seul.",
+    "errorCatalogo": "Je n'ai pas pu charger le catalogue pour le moment.",
+    "preguntame": "Demande-moi sur Instagram",
+    cat: {
+      "Stickers normal": "Stickers",
+      "Stickers holográficos": "Holographiques",
+      "Set Stickers": "Lots de stickers",
+      "Marca páginas": "Marque-pages",
+      "Album stickers": "Album de stickers",
+      "Lienzo pintable 25x18": "Toiles à peindre",
+      "Print Carta": "Prints format lettre",
+      "Print 1/2 Carta": "Prints demi-lettre",
+      "Print acuarela 18x12": "Prints aquarelle"
+    }
+  },
+
+  de: {
+    "meta.title": "Carime Jackson — Sticker, Illustration & Merch",
+    "meta.desc": "Anime- und Popkultur-Sticker, Schlüsselanhänger und Merch, handgemacht von Caro in Concepción, Chile.",
+    "logo.alt": "Carime Jackson, Startseite",
+    "nav.aria": "Hauptmenü",
+    "nav.menu": "Menü",
+    "nav.tienda": "Shop",
+    "nav.como": "So kaufst du",
+    "nav.pers": "Auftragsarbeiten",
+    "nav.sobre": "Über mich",
+    "idioma.aria": "Sprache",
+    "moneda.aria": "Währung der Preise",
+    "carrito.titulo": "Warenkorb",
+    "hero.kicker": "PRODUKTKATALOG — Sticker · Schlüsselanhänger · Merch",
+    "hero.titulo": "ZEICHNUNGEN AUS DEM, WAS ICH <span class='acento'>LIEBE</span>",
+    "hero.intro": "Hallo, ich bin Carime. Ich zeichne aus Freude die Figuren, die mich inspirieren – ob Fanarts aus Anime und Popkultur oder meine eigenen Figuren. Hier findest du sie als Merch, in der Hoffnung, dass sie auch dich inspirieren. Alle diese Produkte sind mit meinen eigenen zwei Händen gemacht. Schau dich in Ruhe um, und wenn du über etwas reden möchtest, schreib mir auf Instagram.",
+    "hero.ver": "Zum Shop",
+    "hero.ig": "Schreib mir auf Instagram",
+    "hero.avatar": "Chibi-Selbstporträt von Caro, mit Bleistift gezeichnet",
+    "como.titulo": "So kaufst du",
+    "como.p1t": "Aussuchen",
+    "como.p1d": "Stöbere im Shop und leg in den Warenkorb, was dir gefällt. Der Bestand ist immer aktuell.",
+    "como.p2t": "Bestellung kopieren",
+    "como.p2d": "Dein Warenkorb rechnet die Paketangebote automatisch aus. Kopiere ihn mit einem Tipp.",
+    "como.p3t": "Schreib mir",
+    "como.p3d": "Füge ihn in eine Nachricht an @carimejackson_art ein, und wir klären die Lieferung.",
+    "promos.label": "Paketangebote:",
+    "tienda.titulo": "Shop",
+    "tienda.sub": "Mit meinem Lager verbunden: Preise und Bestand aktualisieren sich von selbst.",
+    "tienda.buscar": "Suchen",
+    "tienda.ordenar": "Sortieren",
+    "orden.dest": "Empfohlen",
+    "orden.asc": "Preis: aufsteigend",
+    "orden.desc": "Preis: absteigend",
+    "orden.nombre": "Name A–Z",
+    "tienda.cats": "Kategorie",
+    "tienda.cargando": "Katalog wird geladen…",
+    "carrito.vacia": "Noch leer. Tippe bei allem, was dir gefällt, auf „Hinzufügen“, und hier siehst du die Summe mit bereits angewendeten Paketangeboten.",
+    "carrito.subtotal": "Zwischensumme",
+    "carrito.ahorro": "Paketersparnis",
+    "carrito.total": "Gesamt",
+    "carrito.enviar": "Über Instagram senden",
+    "carrito.aviso": "Die Bestellung gilt vorbehaltlich der Zahlungs- und Lieferabsprache, die wir über Instagram treffen.",
+    "carrito.nota": "Kopiere deine Bestellung und füge sie in die Nachricht ein. Die Lieferung klären wir dort.",
+    "pers.titulo": "Illustrationen auf Bestellung",
+    "pers.intro": "Chibis, Gemälde, Cover und mehr: Deine Figuren werden lebendig. Wähl einen Stil, und ich zeichne, was du dir vorstellst.",
+    "pers.pedir": "Auftrag anfragen",
+    "serv.adicional": "Zusätzliche Figur",
+    "serv.cualquier": "Jede beliebige Figur",
+    "chibi.alt": "Chibi-Beispiel: springende Figur mit einem grünen Spross als Kopf",
+    "chibi.tag": "Chibi",
+    "chibi.titulo": "Jede Figur, in süßer Version",
+    "chibi.desc": "Ideal für Sticker, Profilbilder und zum Sammeln. Pro Figur.",
+    "carita.alt": "Gesicht-Beispiel: Chibi-Gesicht eines weinenden rothaarigen Jungen",
+    "carita.tag": "Gesicht",
+    "carita.titulo": "Jede Figur, nur das Gesicht",
+    "carita.desc": "Im Chibi- oder Cartoonstil, in meinen Stilen, ohne Realismus.",
+    "lineart.alt": "Lineart-Beispiel: Glurak in weinroten Linien",
+    "lineart.tag": "Lineart",
+    "lineart.desc": "Ideal zum Ausmalen.",
+    "acuarela.alt": "Beispiel im Aquarellstil: ein Mädchen, das eine Katze umarmt",
+    "acuarela.tag": "Aquarellstil",
+    "acuarela.desc": "Ideal für Postkarten, Drucke und Notizbuch-Cover.",
+    "semi.alt": "Semi-Realismus-Beispiel: Porträt eines Jungen im dunklen Mantel vor rosa Hintergrund",
+    "semi.tag": "Semi-Realismus",
+    "semi.desc": "Brustbild. Dramatische, <strong>nicht realistische</strong> Farben.",
+    "semi.especial": "Sonderpreis für Aufträge",
+    "ed.kicker": "Für dein Buch",
+    "ed.titulo": "Verlagsarbeiten",
+    "ed.desc": "Ich mache auch Verlagsarbeiten. Diese funktionieren etwas anders: Es müssen originale Szenen und Figuren sein, <strong>keine Fanarts</strong>. Wenn der Inhalt im Werk veröffentlicht wird, unterschreiben wir einen Vertrag über die Vertriebs- und Weiterverkaufsrechte.",
+    "ed.nota": "Cover und Innenseiten, druckfertig.",
+    "ed.portada.alt": "Cover des Buches La marca del Destino: Fuego von Nathalie Álvarez Ricartes",
+    "ed.portada": "Cover",
+    "ed.ilus.alt": "Innenillustration: ein goldener Brustkorb, der in einem Sternenhimmel schwebt",
+    "ed.ilus": "Illustration",
+    "ed.maq.alt": "Gesetzte Seite aus Kapitel 3, Marcados",
+    "ed.maq": "Satz & Layout",
+    "ed.pag": "/ Seite",
+    "trabajo.titulo": "So arbeite ich",
+    "trabajo.t1": "Begrenzte Plätze",
+    "trabajo.d1": "Werden in der Reihenfolge der Anfragen vergeben.",
+    "trabajo.t2": "50 % Anzahlung",
+    "trabajo.d2": "Wird im Voraus bezahlt, um deinen Platz zu reservieren.",
+    "trabajo.t3": "Skizze + Farbpalette",
+    "trabajo.d3": "Nichts geht ohne deine Freigabe weiter. Wir beginnen mit Skizze und Farbpalette, und du bekommst unterwegs verschiedene Zwischenstände.",
+    "trabajo.t4": "50 % am Ende",
+    "trabajo.d4": "Wenn das Bild fertig ist, schicke ich dir ein Foto in niedriger Auflösung, gegen das du den Rest bezahlst. Danach bekommst du das Bild in hoher Auflösung.",
+    "trabajo.t5": "Keine kommerzielle Lizenz",
+    "trabajo.d5": "<strong>Mit Ausnahme</strong> von Verlagsarbeiten beinhalten diese Aufträge <strong>keine</strong> Erlaubnis, sie weiterzuverkaufen oder daraus verkäufliche Produkte herzustellen. <strong>Sie sind für deinen persönlichen Gebrauch.</strong>",
+    "trabajo.t6": "Keine bearbeitbaren Dateien",
+    "trabajo.d6": "Bearbeitbare Formate werden in keinem Fall mitgeliefert. Nur das fertige Bild oder Buch.",
+    "cond.titulo": "Weitere Bedingungen",
+    "cond.1": "Mit der Anfrage einer meiner Illustrationen <strong>akzeptierst</strong> du, dass ich in den Stilen arbeite, die ich beherrsche.",
+    "cond.2": "Dieser Account ist, genau wie meine Arbeit, „familienfreundlich“. Deshalb <strong>nehme ich keine</strong> Anfragen mit stark sexuellen oder expliziten, politischen oder gewalttätigen bzw. gewaltverherrlichenden Inhalten an.",
+    "pago.titulo": "Zahlungsmethoden",
+    "pago.metodos": "Chilenische Banküberweisung · PayPal",
+    "pago.dm": "Du weißt nicht, wie du deinen Platz reservierst? Schreib mir eine DM an <strong>@carimejackson_art</strong>.",
+    "pago.reservar": "Platz reservieren",
+    "sobre.alt": "Collage aus semi-realistischen Gemälden von Carime Jackson",
+    "sobre.titulo": "Über mich",
+    "sobre.p1": "Ich zeichne schon immer, in meiner Freizeit und aus purer Freude. Dabei entstehen die Figuren, die mich inspirieren: mal Fanarts meiner Lieblingsserien, -animes und -bücher, mal meine eigenen Figuren.",
+    "sobre.p2": "Jeden Tag versuche ich, mein Leben einfacher zu machen und die positive Seite der Dinge zu sehen, und meine Chibis sind dabei meine kleine Therapie. Sie machen mir Spaß, entspannen mich und bringen mich fast immer zum Lachen.",
+    "sobre.p3": "Gleichzeitig nehme ich das Illustrieren ernst. Ich übe ständig, um meine Technik zu verbessern und meine Ideen selbstbewusster auszudrücken, und dieser Weg hat mich zu einem dramatischeren Stil geführt: dem meiner semi-realistischen Gemälde.",
+    "sobre.p4": "Ich schreibe auch. Als Kind habe ich mit Fanfictions angefangen, mit jeder dazugelernt, und heute habe ich meinen eigenen veröffentlichten Roman: <strong>Almaaz</strong>. Aus diesen Geschichten, veröffentlicht oder noch in der Schublade, entstehen die meisten meiner eigenen Figuren.",
+    "sobre.p5": "Was mich heute antreibt, ist, all das mit mehr Menschen zu teilen. Vielleicht erinnert dich ein Sticker an deine Lieblingsfigur, oder du findest hier einen Ort, um dich auszudrücken und weiterzuwachsen – so wie ich es auch suche.",
+    "sobre.frase": "Und wenn ich dich an eine Sache erinnern möchte, dann an diese: <span class='acento'>Dein Stil entsteht, wenn du aufhörst, dich so sehr zu korrigieren.</span>",
+    "detalle.prev": "Vorheriges Produkt",
+    "detalle.next": "Nächstes Produkt",
+    "detalle.cerrar": "Schließen",
+    "footer.lugar": "Illustration · Concepción, Chile",
+    "footer.sigueme": "Folge mir auf:",
+    "todo": "Alle",
+    "stock.sin": "Gerade nicht vorrätig",
+    "stock.quedan": "Nur noch {n}!",
+    "stock.disp": "{n} verfügbar",
+    "avisame": "Sag mir Bescheid, wenn es wieder da ist",
+    "menosUno": "Ein {nombre} entfernen",
+    "enCarrito": "{n} im Warenkorb",
+    "masUno": "Noch ein {nombre} hinzufügen",
+    "agregarAria": "{nombre} in den Warenkorb legen",
+    "agregar": "Hinzufügen",
+    "producto1": "1 Produkt",
+    "productosN": "{n} Produkte",
+    "sinResultados": "Mit diesen Filtern habe ich nichts gefunden.",
+    "limpiar": "Filter zurücksetzen",
+    "verGrande": "{nombre} groß ansehen",
+    "agotado": "Ausverkauft",
+    "quitarAria": "{nombre} aus dem Warenkorb entfernen",
+    "quitar": "Entfernen",
+    "copiar": "Bestellung kopieren",
+    "copiado": "Bestellung kopiert",
+    "copiaPrompt": "Kopiere deine Bestellung:",
+    "msg.saludo": "Hallo Carime, ich möchte bestellen:",
+    "msg.total": "Gesamt mit Angeboten:",
+    "pos": "{i} von {n}",
+    "cu": "pro Stück",
+    "promoPack": "Paketangebot",
+    "promoDetalle": "Macht {precio} pro Stück. Du kannst beliebige Produkte aus {cat} kombinieren; dein Warenkorb wendet das Angebot automatisch an.",
+    "errorCatalogo": "Der Katalog konnte gerade nicht geladen werden.",
+    "preguntame": "Frag mich auf Instagram",
+    cat: {
+      "Stickers normal": "Sticker",
+      "Stickers holográficos": "Holografisch",
+      "Set Stickers": "Sticker-Sets",
+      "Marca páginas": "Lesezeichen",
+      "Album stickers": "Stickeralbum",
+      "Lienzo pintable 25x18": "Leinwände zum Bemalen",
+      "Print Carta": "Prints im Letter-Format",
+      "Print 1/2 Carta": "Prints im halben Letter-Format",
+      "Print acuarela 18x12": "Aquarell-Prints"
+    }
+  },
+
+  ja: {
+    "meta.title": "Carime Jackson — ステッカー・イラスト・グッズ",
+    "meta.desc": "チリ・コンセプシオンでCaroが手作りしている、アニメやポップカルチャーのステッカー、キーホルダー、グッズ。",
+    "logo.alt": "Carime Jackson、ホーム",
+    "nav.aria": "メイン",
+    "nav.menu": "メニュー",
+    "nav.tienda": "ショップ",
+    "nav.como": "購入方法",
+    "nav.pers": "コミッション",
+    "nav.sobre": "自己紹介",
+    "idioma.aria": "言語",
+    "moneda.aria": "価格の通貨",
+    "carrito.titulo": "カート",
+    "hero.kicker": "商品カタログ — ステッカー・キーホルダー・グッズ",
+    "hero.titulo": "<span class='acento'>大好き</span>から生まれたイラスト",
+    "hero.intro": "こんにちは、Carimeです。アニメやポップカルチャーのファンアートから自分のオリジナルキャラまで、心を動かされたキャラクターを好きで描いています。ここではそれをグッズにしてお届けしています。あなたの心にも何かが届きますように。商品はすべて、わたしのこの手で作っています。ゆっくり見ていってください。気になるものがあれば、Instagramで気軽にメッセージをどうぞ。",
+    "hero.ver": "ショップを見る",
+    "hero.ig": "Instagramでメッセージ",
+    "hero.avatar": "鉛筆で描いたCaroのちびキャラ自画像",
+    "como.titulo": "購入方法",
+    "como.p1t": "選ぶ",
+    "como.p1d": "ショップを見て、気に入ったものをカートに入れてください。在庫は常に最新です。",
+    "como.p2t": "注文をコピー",
+    "como.p2d": "まとめ買い割引はカートが自動で計算します。ワンタップでコピーできます。",
+    "como.p3t": "メッセージを送る",
+    "como.p3d": "@carimejackson_art へのメッセージに貼り付けてください。お届け方法を相談しましょう。",
+    "promos.label": "まとめ買い割引：",
+    "tienda.titulo": "ショップ",
+    "tienda.sub": "在庫と連動しているので、価格と在庫数は自動で更新されます。",
+    "tienda.buscar": "検索",
+    "tienda.ordenar": "並び替え",
+    "orden.dest": "おすすめ順",
+    "orden.asc": "価格の安い順",
+    "orden.desc": "価格の高い順",
+    "orden.nombre": "名前順（A–Z）",
+    "tienda.cats": "カテゴリー",
+    "tienda.cargando": "カタログを読み込み中…",
+    "carrito.vacia": "まだ空っぽです。気に入った商品の「追加」を押すと、割引適用後の合計がここに表示されます。",
+    "carrito.subtotal": "小計",
+    "carrito.ahorro": "まとめ買い割引",
+    "carrito.total": "合計",
+    "carrito.enviar": "Instagramで送る",
+    "carrito.aviso": "ご注文は、Instagramで相談して決めるお支払い・お届け方法が確定してからの成立となります。",
+    "carrito.nota": "注文をコピーしてメッセージに貼り付けてください。お届け方法はそこで相談しましょう。",
+    "pers.titulo": "オーダーメイドイラスト",
+    "pers.intro": "ちびキャラ、絵画風、表紙など、あなたのキャラクターに命を吹き込みます。スタイルを選んでいただければ、思い描いたものを描きます。",
+    "pers.pedir": "依頼する",
+    "serv.adicional": "キャラクター追加",
+    "serv.cualquier": "どんなキャラクターでも",
+    "chibi.alt": "ちびキャラの例：緑の芽の頭をしたキャラクターがジャンプしている",
+    "chibi.tag": "ちびキャラ",
+    "chibi.titulo": "どんなキャラでも、かわいいちびキャラに",
+    "chibi.desc": "ステッカーやアイコン、コレクションにぴったり。1キャラクターあたりの料金です。",
+    "carita.alt": "顔のみの例：泣いている赤髪の男の子のちび顔",
+    "carita.tag": "顔のみ",
+    "carita.titulo": "どんなキャラでも、顔だけ",
+    "carita.desc": "ちびキャラまたはデフォルメで、わたしの画風で描きます（リアル調は不可）。",
+    "lineart.alt": "線画の例：ワインレッドの線で描いたリザードン",
+    "lineart.tag": "線画",
+    "lineart.desc": "ぬり絵にぴったり。",
+    "acuarela.alt": "水彩風の例：猫を抱きしめる女の子",
+    "acuarela.tag": "水彩風",
+    "acuarela.desc": "ポストカード、プリント、ノートの表紙にぴったり。",
+    "semi.alt": "セミリアルの例：ピンクの背景に黒いコートの男の子の肖像",
+    "semi.tag": "セミリアル",
+    "semi.desc": "バストアップ。ドラマチックで<strong>非写実的</strong>な色づかいです。",
+    "semi.especial": "コミッション特別価格",
+    "ed.kicker": "あなたの本のために",
+    "ed.titulo": "出版向けのお仕事",
+    "ed.desc": "出版向けのお仕事もお受けしています。こちらは少し仕組みが異なり、オリジナルのシーンやキャラクターに限ります（<strong>ファンアートは不可</strong>）。作品として出版する際には、配布・再販の許諾に関する契約を交わします。",
+    "ed.nota": "そのまま出版できる表紙と本文ページ。",
+    "ed.portada.alt": "Nathalie Álvarez Ricartes著『La marca del Destino: Fuego』の表紙",
+    "ed.portada": "表紙",
+    "ed.ilus.alt": "挿絵：星空に浮かぶ金色の胸郭",
+    "ed.ilus": "挿絵",
+    "ed.maq.alt": "第3章「Marcados」の組版ページ",
+    "ed.maq": "組版",
+    "ed.pag": "／ページ",
+    "trabajo.titulo": "制作の流れ",
+    "trabajo.t1": "受付枠に限りあり",
+    "trabajo.d1": "先着順で受け付けます。",
+    "trabajo.t2": "前金50%",
+    "trabajo.d2": "枠を確保するため、先にお支払いいただきます。",
+    "trabajo.t3": "ラフ＋配色",
+    "trabajo.d3": "進める前に必ずご確認いただきます。まずラフと配色から始め、途中経過も随時お送りします。",
+    "trabajo.t4": "残金50%は完成時",
+    "trabajo.d4": "完成したら低解像度の画像をお送りし、それを確認のうえ残金をお支払いいただきます。その後、高解像度の画像をお送りします。",
+    "trabajo.t5": "商用利用は不可",
+    "trabajo.d5": "出版向けのお仕事を<strong>除き</strong>、コミッション作品の転売やグッズ化などの商用利用は<strong>できません</strong>。<strong>個人利用に限ります。</strong>",
+    "trabajo.t6": "編集用データは含みません",
+    "trabajo.d6": "編集可能なデータはいかなる場合もお渡ししません。完成した画像または本のみのお渡しです。",
+    "cond.titulo": "その他の条件",
+    "cond.1": "イラストをご依頼いただいた時点で、わたしの画風で描くことに<strong>ご同意</strong>いただいたものとします。",
+    "cond.2": "このアカウントもわたしの作品も「ファミリーフレンドリー」です。そのため、性的・露骨な表現を多く含むもの、政治的な内容、暴力的または暴力をあおる内容のご依頼は<strong>お受けできません</strong>。",
+    "pago.titulo": "お支払い方法",
+    "pago.metodos": "チリの銀行振込 · PayPal",
+    "pago.dm": "枠の予約方法がわからないときは、<strong>@carimejackson_art</strong> にDMをください。",
+    "pago.reservar": "枠を予約する",
+    "sobre.alt": "Carime Jacksonのセミリアル絵画のコラージュ",
+    "sobre.titulo": "自己紹介",
+    "sobre.p1": "物心ついたころから、空いた時間に好きで絵を描いてきました。そこに登場するのは、わたしの心を動かすキャラクターたち。大好きなドラマやアニメ、本のファンアートのときもあれば、自分のキャラクターのときもあります。",
+    "sobre.p2": "毎日、暮らしをシンプルにして物事のいい面を見るように心がけていて、ちびキャラはそんなわたしのささやかなセラピーになっています。描いていると楽しくて、ほっとして、たいてい笑ってしまいます。",
+    "sobre.p3": "その一方で、イラストには真剣に向き合っています。技術を磨き、自分のアイデアをもっと自信をもって表現できるよう日々練習を重ね、その道のりがよりドラマチックな画風、セミリアルの絵画へとつながりました。",
+    "sobre.p4": "文章も書いています。子どものころに二次創作小説から始め、一作ごとに学びながら、今では自分の小説『<strong>Almaaz</strong>』を出版しています。オリジナルキャラクターのほとんどは、出版したものもまだ眠っているものも含め、そうした物語から生まれています。",
+    "sobre.p5": "今のわたしの原動力は、こうしたすべてをもっと多くの人と分かち合うこと。ステッカーがあなたの好きなキャラクターを思い出させてくれたり、ここが、わたしと同じように自分を表現して成長し続けるための場所になったりしたらうれしいです。",
+    "sobre.frase": "そして、ひとつだけ伝えたいのはこれ。<span class='acento'>自分を直しすぎるのをやめたとき、あなたのスタイルが生まれます。</span>",
+    "detalle.prev": "前の商品",
+    "detalle.next": "次の商品",
+    "detalle.cerrar": "閉じる",
+    "footer.lugar": "イラスト · チリ・コンセプシオン",
+    "footer.sigueme": "フォローしてね：",
+    "todo": "すべて",
+    "stock.sin": "現在在庫切れ",
+    "stock.quedan": "残り{n}点！",
+    "stock.disp": "在庫{n}点",
+    "avisame": "再入荷を問い合わせる",
+    "menosUno": "{nombre}を1つ減らす",
+    "enCarrito": "カートに{n}点",
+    "masUno": "{nombre}をもう1つ追加",
+    "agregarAria": "{nombre}をカートに追加",
+    "agregar": "追加",
+    "producto1": "1点の商品",
+    "productosN": "{n}点の商品",
+    "sinResultados": "条件に合う商品が見つかりませんでした。",
+    "limpiar": "絞り込みをクリア",
+    "verGrande": "{nombre}を拡大して見る",
+    "agotado": "売り切れ",
+    "quitarAria": "{nombre}をカートから削除",
+    "quitar": "削除",
+    "copiar": "注文をコピー",
+    "copiado": "コピーしました",
+    "copiaPrompt": "注文をコピーしてください：",
+    "msg.saludo": "こんにちは、Carimeさん。以下を注文したいです：",
+    "msg.total": "割引後の合計：",
+    "pos": "{i} / {n}",
+    "cu": "1点",
+    "promoPack": "まとめ買い割引",
+    "promoDetalle": "1点あたり{precio}。{cat}の商品なら自由に組み合わせOK。割引はカートで自動適用されます。",
+    "errorCatalogo": "現在カタログを読み込めません。",
+    "preguntame": "Instagramで問い合わせる",
+    cat: {
+      "Stickers normal": "ステッカー",
+      "Stickers holográficos": "ホログラムステッカー",
+      "Set Stickers": "ステッカーセット",
+      "Marca páginas": "しおり",
+      "Album stickers": "ステッカーアルバム",
+      "Lienzo pintable 25x18": "ぬり絵キャンバス",
+      "Print Carta": "レターサイズプリント",
+      "Print 1/2 Carta": "ハーフレタープリント",
+      "Print acuarela 18x12": "水彩紙プリント"
+    }
+  }
+};
+</script>
+
+<script>
+const SHEET_ID = "1OuFsKM9asAsjtvtqyvhgJS_przfRn7BO1DBYKzy10n0";
+const GID = "2077533859";
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+const IG_DM = "https://ig.me/m/carimejackson_art";
+const LISTA_KEY = "cj-mi-lista";
+
+// Feature flags. Para probar sin publicar: ?flags=mostrarStock (o ?flags=-mostrarStock para apagar)
+const FLAGS = {
+  mostrarStock: false, // muestra "N disponibles" / "¡Quedan N!" en las tarjetas y el detalle
+  mostrarPromosPack: false // muestra la fila "Promos por pack" en Cómo comprar (las promos siguen en cada producto)
+};
+new URLSearchParams(location.search).get("flags")?.split(",").forEach(f => {
+  const off = f.startsWith("-"), k = f.replace(/^-/, "");
+  if(k in FLAGS) FLAGS[k] = !off;
+});
+
+// Nombre visible y orden de las categorías (columna "Producto" de la planilla)
+const CATEGORIAS = {
+  "Stickers normal": "Stickers",
+  "Stickers holográficos": "Holográficos",
+  "Set Stickers": "Sets de stickers",
+  "Marca páginas": "Marcapáginas",
+  "Album stickers": "Álbum de stickers",
+  "Lienzo pintable 25x18": "Lienzos pintables",
+  "Print Carta": "Prints carta",
+  "Print 1/2 Carta": "Prints ½ carta",
+  "Print acuarela 18x12": "Prints acuarela"
+};
+const ORDEN_CAT = Object.keys(CATEGORIAS);
+const BASURERO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
+const HEART = '<img class="corazon" src="assets/logos/corazon.svg" alt="" width="28" height="29">';
+
+function driveThumb(url){
+  if(!url) return null;
+  const match = url.match(/id=([a-zA-Z0-9_-]+)/) || url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(!match) return null;
+  return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w500`;
+}
+
+function parseMoney(v){
+  if(v === undefined || v === null) return null;
+  const n = parseFloat(String(v).replace(/\./g,'').replace(/,/g,'.'));
+  return isNaN(n) ? null : n;
+}
+
+const MONEDA_KEY = "cj-moneda";
+const CLP_POR_USD = 1000;
+let moneda = "clp";
+try { if(localStorage.getItem(MONEDA_KEY) === "usd") moneda = "usd"; } catch(e) {}
+
+// Los precios vienen en CLP; en USD se dividen por 1.000. La moneda se ve en el selector del header
+function fmtPrecio(n){
+  if(moneda === "usd") return "USD " + (n / CLP_POR_USD).toLocaleString('en-US', { maximumFractionDigits: 2 });
+  return "$ " + Math.round(n).toLocaleString('es-CL');
+}
+
+// "3x1.000" → { k: 3, t: 1000 }
+function parsePromo(txt){
+  const m = String(txt || "").match(/(\d+)\s*x\s*([\d.,]+)/i);
+  if(!m) return null;
+  const k = parseInt(m[1], 10);
+  const t = parseMoney(m[2]);
+  if(!k || !t) return null;
+  return { k, t };
+}
+function promoLabel(promo){ return `${promo.k} × ${fmtPrecio(promo.t)}`; }
+
+function pickKey(row, candidates){
+  const keys = Object.keys(row);
+  for(const c of candidates){
+    const found = keys.find(k => k.trim().toLowerCase() === c.toLowerCase());
+    if(found) return row[found];
+  }
+  return undefined;
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function catLabel(c){ return I18N[idioma].cat[c] || CATEGORIAS[c] || c; }
+
+// Idioma: ?lang=en en la URL, luego el que la persona eligió antes, luego el del navegador
+const IDIOMA_KEY = "cj-idioma";
+// Idiomas activos. pt, fr, de y ja ya están traducidos en I18N: para encenderlos, agrégalos aquí
+const IDIOMAS = ["es", "en"];
+document.querySelectorAll('#idioma option').forEach(o => { if(!IDIOMAS.includes(o.value)) o.remove(); });
+let idioma = "es";
+{
+  let guardado = null;
+  try { guardado = localStorage.getItem(IDIOMA_KEY); } catch(e) {}
+  const candidatos = [new URLSearchParams(location.search).get("lang"), guardado, ...(navigator.languages || [navigator.language])];
+  idioma = candidatos.map(l => String(l || "").slice(0, 2).toLowerCase()).find(l => IDIOMAS.includes(l)) || "es";
+}
+
+// Texto del idioma actual; {clave} se reemplaza por vars.clave
+function t(clave, vars = {}){
+  const txt = I18N[idioma][clave] ?? I18N.es[clave] ?? clave;
+  return txt.replace(/\{(\w+)\}/g, (m, k) => k in vars ? vars[k] : m);
+}
+
+// Los textos fijos en español se leen del HTML una sola vez, para poder volver a ellos
+const originalesI18n = new Map();
+document.querySelectorAll('[data-i18n]').forEach(el => originalesI18n.set(el, el.innerHTML));
+document.querySelectorAll('[data-i18n-attr]').forEach(el => {
+  const [attr] = el.dataset.i18nAttr.split(":");
+  originalesI18n.set(el, el.getAttribute(attr));
+});
+function traducirFijos(){
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.innerHTML = idioma === "es" ? originalesI18n.get(el) : (I18N[idioma][el.dataset.i18n] ?? originalesI18n.get(el));
+  });
+  document.querySelectorAll('[data-i18n-attr]').forEach(el => {
+    const [attr, clave] = el.dataset.i18nAttr.split(":");
+    el.setAttribute(attr, idioma === "es" ? originalesI18n.get(el) : (I18N[idioma][clave] ?? originalesI18n.get(el)));
+  });
+}
+
+let productos = [];
+let promosPorCat = {};
+let catActiva = "__todo";
+let lista = {};
+let idsVisibles = [];
+
+try { lista = JSON.parse(localStorage.getItem(LISTA_KEY)) || {}; } catch(e) { lista = {}; }
+function guardarLista(){ try { localStorage.setItem(LISTA_KEY, JSON.stringify(lista)); } catch(e) {} }
+
+const $ = id => document.getElementById(id);
+
+function visibles(){ return productos; }
+
+function renderCategorias(){
+  const vis = visibles();
+  const counts = {};
+  vis.forEach(p => { counts[p.categoria] = (counts[p.categoria] || 0) + 1; });
+  const cats = Object.keys(counts).sort((a, b) => {
+    const ia = ORDEN_CAT.indexOf(a), ib = ORDEN_CAT.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b, 'es');
+  });
+  if(catActiva !== "__todo" && !counts[catActiva]) catActiva = "__todo";
+  const opciones = [{ key: "__todo", label: t("todo"), n: vis.length }].concat(cats.map(c => ({ key: c, label: catLabel(c), n: counts[c] })));
+  $('categoria').innerHTML = opciones.map(c =>
+    `<option value="${esc(c.key)}"${c.key === catActiva ? " selected" : ""}>${esc(c.label)} (${c.n})</option>`
+  ).join("");
+}
+
+// Sin el flag de stock, todo se puede agregar sin tope y nada se ve agotado
+function disponible(p){ return !FLAGS.mostrarStock || p.stock > 0; }
+function maximo(p){ return FLAGS.mostrarStock ? p.stock : Infinity; }
+
+function stockHTML(p){
+  if(!FLAGS.mostrarStock) return '';
+  const agotado = p.stock <= 0;
+  const poco = !agotado && p.stock <= 3;
+  return `<span class="stock${poco ? " poco" : ""}">${agotado ? t("stock.sin") : poco ? t("stock.quedan", {n: p.stock}) : t("stock.disp", {n: p.stock})}</span>`;
+}
+
+function accionHTML(p, qty){
+  if(!disponible(p)){
+    return `<a href="${IG_DM}" target="_blank" rel="noopener" class="btn btn-borde btn-sm btn-full">${t("avisame")}</a>`;
+  }
+  if(qty > 0){
+    return `<div class="stepper">
+        <button type="button" data-accion="menos" data-id="${p.id}" aria-label="${t("menosUno", {nombre: esc(p.nombre)})}">−</button>
+        <span>${t("enCarrito", {n: qty})}</span>
+        <button type="button" data-accion="mas" data-id="${p.id}" aria-label="${t("masUno", {nombre: esc(p.nombre)})}" ${qty >= maximo(p) ? "disabled" : ""}>+</button>
+      </div>`;
+  }
+  return `<button type="button" class="btn btn-primario btn-sm btn-full" data-accion="agregar" data-id="${p.id}" aria-label="${t("agregarAria", {nombre: esc(p.nombre)})}">${t("agregar")}</button>`;
+}
+
+function renderGrid(){
+  const q = $('buscar').value.trim().toLowerCase();
+  const orden = $('orden').value;
+  let items = visibles().filter(p =>
+    (catActiva === "__todo" || p.categoria === catActiva) &&
+    (!q || p.nombre.toLowerCase().includes(q) || catLabel(p.categoria).toLowerCase().includes(q))
+  );
+  if(orden === "precio-asc") items.sort((a, b) => a.precio - b.precio || a.orden - b.orden);
+  if(orden === "precio-desc") items.sort((a, b) => b.precio - a.precio || a.orden - b.orden);
+  if(orden === "nombre") items.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+
+  idsVisibles = items.map(p => p.id);
+  $('resultados').textContent = items.length === 1 ? t("producto1") : t("productosN", {n: items.length});
+  const estado = $('estado');
+  if(items.length === 0){
+    estado.innerHTML = `<p>${t("sinResultados")}</p><button type="button" class="btn btn-borde btn-sm" id="limpiar">${t("limpiar")}</button>`;
+    estado.hidden = false;
+  } else {
+    estado.hidden = true;
+  }
+
+  $('grid').innerHTML = items.map(p => {
+    const qty = lista[p.id] || 0;
+    const agotado = !disponible(p);
+    const promo = promosPorCat[p.categoria];
+    const ph = `<span class="ph caps">${HEART}${esc(p.nombre)}</span>`;
+    const img = p.imgUrl
+      ? `<img src="${esc(p.imgUrl)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer" data-ph="1">`
+      : ph;
+    return `<article class="tarjeta card${agotado ? " agotado" : ""}">
+      <button type="button" class="card-img" data-detalle="${esc(p.id)}" aria-label="${t("verGrande", {nombre: esc(p.nombre)})}">${img}${agotado ? `<span class="badge-agotado caps">${t("agotado")}</span>` : ''}</button>
+      <div class="card-body">
+        <span class="card-cat caps">${esc(catLabel(p.categoria))}</span>
+        <h3><button type="button" data-detalle="${esc(p.id)}">${esc(p.nombre)}</button></h3>
+        <div class="precio-fila">
+          <span class="precio">${fmtPrecio(p.precio)}</span>
+          ${promo ? `<span class="promo caps">${esc(promoLabel(promo))}</span>` : ''}
+        </div>
+        ${stockHTML(p)}
+        <div class="card-accion">${accionHTML(p, qty)}</div>
+      </div>
+    </article>`;
+  }).join("");
+
+  // Si una foto de Drive no carga, se muestra el nombre sobre el rosa
+  $('grid').querySelectorAll('img[data-ph]').forEach(img => {
+    esperarFoto(img);
+    img.addEventListener('error', () => {
+      const nombre = img.getAttribute('alt');
+      img.outerHTML = `<span class="ph caps">${HEART}${esc(nombre)}</span>`;
+    }, { once: true });
+  });
+}
+
+function calcularLista(){
+  const entradas = Object.keys(lista)
+    .map(id => ({ p: productos.find(x => x.id === id), qty: lista[id] }))
+    .filter(e => e.p && disponible(e.p))
+    .map(e => ({ p: e.p, qty: Math.min(e.qty, maximo(e.p)) }));
+  let subtotal = 0, total = 0, cantidad = 0;
+  const porCat = {};
+  entradas.forEach(e => {
+    subtotal += e.p.precio * e.qty;
+    cantidad += e.qty;
+    (porCat[e.p.categoria] = porCat[e.p.categoria] || []).push(e);
+  });
+  // La promo se aplica juntando productos de la misma categoría
+  Object.keys(porCat).forEach(c => {
+    const grupo = porCat[c];
+    const n = grupo.reduce((s, e) => s + e.qty, 0);
+    const bruto = grupo.reduce((s, e) => s + e.p.precio * e.qty, 0);
+    const promo = promosPorCat[c];
+    if(!promo){ total += bruto; return; }
+    const unitario = bruto / n;
+    total += Math.min(bruto, Math.floor(n / promo.k) * promo.t + (n % promo.k) * unitario);
+  });
+  return { entradas, subtotal, total, cantidad };
+}
+
+function renderLista(){
+  const { entradas, subtotal, total, cantidad } = calcularLista();
+  $('contador').textContent = cantidad;
+  const vacia = entradas.length === 0;
+  $('lista-vacia').hidden = !vacia;
+  $('lista-llena').hidden = vacia;
+  $('lista-llena').style.display = vacia ? 'none' : 'flex';
+  if(vacia) return;
+  $('lista-items').innerHTML = entradas.map(e => `<li>
+      <div><strong>${esc(e.p.nombre)}</strong><small>${e.qty} × ${fmtPrecio(e.p.precio)} · ${esc(catLabel(e.p.categoria))}</small></div>
+      <button type="button" class="quitar" data-accion="quitar" data-id="${e.p.id}" aria-label="${t("quitarAria", {nombre: esc(e.p.nombre)})}" title="${t("quitar")}">${BASURERO}</button>
+    </li>`).join("");
+  $('subtotal').textContent = fmtPrecio(subtotal);
+  $('total').textContent = fmtPrecio(total);
+  const ahorro = subtotal - total;
+  $('fila-ahorro').style.display = ahorro > 0 ? 'flex' : 'none';
+  $('ahorro').textContent = "− " + fmtPrecio(ahorro);
+  $('copiar').textContent = t("copiar");
+}
+
+function mensajePedido(){
+  const { entradas, total } = calcularLista();
+  return t("msg.saludo") + "\n" +
+    entradas.map(e => `- ${e.qty} × ${e.p.nombre} (${catLabel(e.p.categoria)})`).join("\n") +
+    `\n${t("msg.total")} ${fmtPrecio(total)}${moneda === "clp" ? " CLP" : ""}`;
+}
+
+function setQty(id, n){
+  const p = productos.find(x => x.id === id);
+  if(!p) return;
+  n = Math.min(n, maximo(p));
+  if(n <= 0) delete lista[id]; else lista[id] = n;
+  guardarLista();
+  renderGrid();
+  renderLista();
+  if($('detalle').open) renderDetalleInfo();
+}
+
+let detalleId = null;
+
+// Muestra el corazón dibujándose detrás de la foto hasta que termine de cargar (o falle)
+function esperarFoto(img){
+  const caja = img.parentElement;
+  if(img.complete) return;
+  caja.classList.add('cargando');
+  const listo = () => caja.classList.remove('cargando');
+  img.addEventListener('load', listo, { once: true });
+  img.addEventListener('error', listo, { once: true });
+}
+
+function abrirDetalle(id){
+  const p = productos.find(x => x.id === id);
+  if(!p) return;
+  detalleId = id;
+  const foto = $('detalle-foto');
+  foto.classList.remove('cargando');
+  const ph = `<span class="ph caps">${HEART}${esc(p.nombre)}</span>`;
+  if(p.imgUrl){
+    foto.innerHTML = `<img src="${esc(p.imgUrl.replace("sz=w500", "sz=w1200"))}" alt="${esc(p.nombre)}" referrerpolicy="no-referrer">`;
+    esperarFoto(foto.querySelector('img'));
+    foto.querySelector('img').addEventListener('error', () => { foto.innerHTML = ph; }, { once: true });
+  } else {
+    foto.innerHTML = ph;
+  }
+  renderDetalleInfo();
+  if(!$('detalle').open) $('detalle').showModal();
+}
+
+// Carrusel: recorre los productos en el mismo orden y con los mismos filtros que la tienda
+function moverDetalle(paso){
+  const n = idsVisibles.length;
+  const i = idsVisibles.indexOf(detalleId);
+  if(n < 2 || i < 0) return;
+  abrirDetalle(idsVisibles[(i + paso + n) % n]);
+}
+
+function renderDetalleInfo(){
+  const p = productos.find(x => x.id === detalleId);
+  if(!p) return;
+  const qty = lista[p.id] || 0;
+  const promo = promosPorCat[p.categoria];
+  const pos = idsVisibles.indexOf(p.id);
+  const varios = idsVisibles.length > 1 && pos >= 0;
+  $('detalle-prev').hidden = !varios;
+  $('detalle-next').hidden = !varios;
+  $('detalle-info').innerHTML = `
+    ${varios ? `<span class="detalle-pos">${t("pos", {i: pos + 1, n: idsVisibles.length})}</span>` : ''}
+    <span class="card-cat caps">${esc(catLabel(p.categoria))}</span>
+    <h2 id="detalle-nombre">${esc(p.nombre)}</h2>
+    <span class="precio">${fmtPrecio(p.precio)} <small class="caps">${t("cu")}</small></span>
+    ${promo ? `<div class="detalle-promo">
+      <span class="caps">${t("promoPack")}</span>
+      <strong>${esc(promoLabel(promo))}</strong>
+      <span>${t("promoDetalle", {precio: fmtPrecio(promo.t / promo.k), cat: esc(catLabel(p.categoria))})}</span>
+    </div>` : ''}
+    ${stockHTML(p)}
+    <div class="card-accion">${accionHTML(p, qty)}</div>`;
+}
+
+function renderTodo(){ renderCategorias(); renderGrid(); renderLista(); }
+
+let catsPromo = [];
+function renderPromos(){
+  const promos = $('promos');
+  promos.querySelectorAll('.pill-promo').forEach(el => el.remove());
+  promos.insertAdjacentHTML('beforeend', catsPromo.map(c =>
+    `<span class="pill pill-promo caps">${esc(catLabel(c))} <strong>${esc(promoLabel(promosPorCat[c]))}</strong></span>`
+  ).join(""));
+}
+
+// Precios fijos de la página (personalizados, editorial)
+function renderPreciosFijos(){
+  document.querySelectorAll('[data-clp]').forEach(el => { el.textContent = fmtPrecio(Number(el.dataset.clp)); });
+}
+
+function cambiarMoneda(m){
+  moneda = m;
+  try { localStorage.setItem(MONEDA_KEY, m); } catch(e) {}
+  document.querySelectorAll('[data-moneda]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.moneda === m)));
+  renderPreciosFijos();
+  renderPromos();
+  if(productos.length){ renderGrid(); renderLista(); }
+  if($('detalle').open) renderDetalleInfo();
+}
+
+function cambiarIdioma(l){
+  idioma = l;
+  try { localStorage.setItem(IDIOMA_KEY, l); } catch(e) {}
+  document.documentElement.lang = l;
+  $('idioma').value = l;
+  $('idioma-codigo').textContent = l.toUpperCase();
+  traducirFijos();
+  $('copiar').textContent = t("copiar");
+  renderPromos();
+  if(productos.length) renderTodo();
+  if($('detalle').open) renderDetalleInfo();
+}
+
+// Eventos
+$('buscar').addEventListener('input', renderGrid);
+$('orden').addEventListener('change', renderGrid);
+$('categoria').addEventListener('change', e => {
+  catActiva = e.target.value;
+  renderGrid();
+});
+document.addEventListener('click', e => {
+  const d = e.target.closest('[data-detalle]');
+  if(d){ abrirDetalle(d.dataset.detalle); return; }
+  const b = e.target.closest('[data-accion]');
+  if(b){
+    const id = b.dataset.id;
+    const qty = lista[id] || 0;
+    if(b.dataset.accion === "agregar") setQty(id, 1);
+    if(b.dataset.accion === "mas") setQty(id, qty + 1);
+    if(b.dataset.accion === "menos") setQty(id, qty - 1);
+    if(b.dataset.accion === "quitar") setQty(id, 0);
+    return;
+  }
+  if(e.target.id === "limpiar"){
+    $('buscar').value = "";
+    catActiva = "__todo";
+    renderCategorias();
+    renderGrid();
+  }
+});
+$('cerrar-detalle').addEventListener('click', () => $('detalle').close());
+$('detalle-prev').addEventListener('click', () => moverDetalle(-1));
+$('detalle-next').addEventListener('click', () => moverDetalle(1));
+$('detalle').addEventListener('keydown', e => {
+  if(e.key === "ArrowLeft") moverDetalle(-1);
+  if(e.key === "ArrowRight") moverDetalle(1);
+});
+// Deslizar el dedo sobre la foto también cambia de producto
+let toqueX = null;
+$('detalle-foto').addEventListener('touchstart', e => { toqueX = e.touches[0].clientX; }, { passive: true });
+$('detalle-foto').addEventListener('touchend', e => {
+  if(toqueX === null) return;
+  const dx = e.changedTouches[0].clientX - toqueX;
+  toqueX = null;
+  if(Math.abs(dx) > 50) moverDetalle(dx < 0 ? 1 : -1);
+});
+// Clic fuera del panel (en el fondo oscuro) cierra el detalle
+$('detalle').addEventListener('click', e => { if(e.target === $('detalle') || e.target.classList.contains('detalle-nav')) $('detalle').close(); });
+
+// Menú hamburguesa (mobile): se cierra al elegir un enlace, con Escape o tocando fuera
+function abrirMenu(abrir){
+  $('hamburguesa').setAttribute('aria-expanded', abrir);
+  $('menu-principal').classList.toggle('abierto', abrir);
+}
+$('idioma').addEventListener('change', e => cambiarIdioma(e.target.value));
+// Chrome considera "foco de teclado" incluso un clic en un <select>; marcamos a mano cuando se llega con Tab
+$('idioma').addEventListener('keyup', e => { if(e.key === 'Tab') $('idioma').parentElement.classList.add('con-teclado'); });
+$('idioma').addEventListener('blur', () => $('idioma').parentElement.classList.remove('con-teclado'));
+cambiarIdioma(idioma);
+document.querySelectorAll('[data-moneda]').forEach(b => b.addEventListener('click', () => cambiarMoneda(b.dataset.moneda)));
+cambiarMoneda(moneda);
+
+$('hamburguesa').addEventListener('click', () => abrirMenu($('hamburguesa').getAttribute('aria-expanded') !== 'true'));
+$('menu-principal').addEventListener('click', e => { if(e.target.closest('a')) abrirMenu(false); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') abrirMenu(false); });
+document.addEventListener('click', e => { if(!e.target.closest('header')) abrirMenu(false); });
+
+$('copiar').addEventListener('click', async () => {
+  const texto = mensajePedido();
+  try {
+    await navigator.clipboard.writeText(texto);
+    $('copiar').textContent = t("copiado");
+  } catch(err) {
+    window.prompt(t("copiaPrompt"), texto);
+  }
+});
+
+// Ancla a la que la persona quiere llegar mientras la página se acomoda (catálogo, fotos, fuentes):
+// la del enlace (o la URL al entrar). Cada vez que la página cambia de alto la volvemos a alinear,
+// hasta que la persona se desplace por su cuenta o pasen unos segundos desde que cargó el catálogo.
+const buscarAncla = hash => hash.length > 1 ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
+let anclaPendiente = null;
+let ultimoClicAncla = 0, catalogoListo = false, timerAncla;
+const soltarAnclaPronto = () => { clearTimeout(timerAncla); timerAncla = setTimeout(() => { anclaPendiente = null; }, 2500); };
+// Al abrir o refrescar, la página siempre parte arriba: se ignora el #ancla de la URL
+// y la posición que el navegador recordaba. Los enlaces con # siguen funcionando al hacer clic.
+history.scrollRestoration = "manual";
+if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+window.scrollTo(0, 0);
+const alinearAncla = () => { if(anclaPendiente) anclaPendiente.scrollIntoView({behavior: "instant", block: "start"}); };
+new ResizeObserver(alinearAncla).observe(document.body);
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if(a){ anclaPendiente = buscarAncla(a.getAttribute('href')); ultimoClicAncla = Date.now(); if(catalogoListo) soltarAnclaPronto(); }
+  else anclaPendiente = null;
+});
+// La inercia del trackpad sigue mandando 'wheel' un rato después del clic: esos no cuentan
+window.addEventListener('wheel', () => { if(Date.now() - ultimoClicAncla > 800) anclaPendiente = null; }, {passive: true});
+['touchstart', 'keydown'].forEach(ev =>
+  window.addEventListener(ev, () => { anclaPendiente = null; }, {passive: true}));
+
+Papa.parse(CSV_URL, {
+  download: true,
+  header: false,
+  skipEmptyLines: true,
+  complete: function(results){
+    $('cargador').hidden = true;
+    // Encabezados a mano: la planilla tiene dos columnas "Foto" y nos quedamos con la primera
+    const [encabezados, ...filas] = results.data;
+    const rows = filas.map(f => {
+      const row = {};
+      encabezados.forEach((h, j) => { const k = String(h).trim(); if(!(k in row)) row[k] = f[j]; });
+      return row;
+    });
+    // Columna "Ocultar en web": casilla marcada = no se muestra en la tienda
+    const ocultar = row => String(pickKey(row, ["Ocultar en web"]) || "").trim().toUpperCase() === "TRUE";
+    productos = rows.filter(row => !ocultar(row)).map((row, i) => {
+      const nombre = (pickKey(row, ["Nombre"]) || "").trim();
+      const categoria = (pickKey(row, ["Producto"]) || "Otros").trim();
+      const stock = parseMoney(pickKey(row, ["Inventario final"])) ?? 0;
+      const promo = parsePromo(pickKey(row, ["Promo"]));
+      if(promo && promo.k > 1 && !promosPorCat[categoria]) promosPorCat[categoria] = promo;
+      return {
+        id: (pickKey(row, ["ProductID"]) || `${nombre}-${categoria}-${i}`).trim(),
+        nombre,
+        categoria,
+        imgUrl: driveThumb(pickKey(row, ["Foto"])),
+        precio: parseMoney(pickKey(row, ["Precio"])),
+        stock: Math.max(0, Math.round(stock)),
+        orden: i
+      };
+    }).filter(p => p.nombre && p.precio !== null);
+
+    // Productos disponibles primero, conservando el orden de la planilla
+    productos.sort((a, b) => disponible(b) - disponible(a) || a.orden - b.orden);
+    productos.forEach((p, i) => { p.orden = i; });
+
+    // Promos por pack, con el nombre de cada categoría
+    const promos = $('promos');
+    const conStock = new Set(productos.filter(disponible).map(p => p.categoria));
+    const cats = ORDEN_CAT.filter(c => promosPorCat[c]).concat(Object.keys(promosPorCat).filter(c => !ORDEN_CAT.includes(c)))
+      .filter(c => conStock.has(c));
+    catsPromo = cats;
+    renderPromos();
+    promos.hidden = !FLAGS.mostrarPromosPack || cats.length === 0;
+
+    renderTodo();
+
+    // Al cargar el catálogo la tienda crece y empuja hacia abajo las secciones siguientes.
+    // Si la persona iba hacia un ancla (#personalizados, #sobre-mi…), la volvemos a alinear.
+    catalogoListo = true;
+    alinearAncla();
+    soltarAnclaPronto();
+  },
+  error: function(err){
+    $('cargador').hidden = true;
+    $('resultados').textContent = "";
+    const estado = $('estado');
+    estado.innerHTML = `<p>${t("errorCatalogo")}</p><a href="${IG_DM}" target="_blank" rel="noopener" class="btn btn-borde btn-sm">${t("preguntame")}</a>`;
+    estado.hidden = false;
+    console.error(err);
+  }
+});
+</script>
+
+</body>
+</html>

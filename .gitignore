@@ -1,0 +1,5 @@
+.DS_Store
+.claude/
+# Archivos fuente pesados que la página no usa
+assets/ilustraciones/paintings_banner.png
+assets/ilustraciones/chibi-boceto.png
