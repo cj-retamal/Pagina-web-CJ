@@ -132,6 +132,12 @@
   .paso{padding:28px;display:flex;flex-direction:column;gap:10px;}
   .paso-num{font-size:32px;font-weight:800;color:var(--acento);line-height:1;}
   .paso-titulo{font-size:14px;font-weight:700;}
+  .encargo-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px 48px;padding:56px 64px;border-radius:55px;background:var(--fondo-medio);color:var(--texto);}
+  .encargo-texto{display:flex;flex-direction:column;gap:10px;flex:1 1 360px;max-width:700px;}
+  .encargo-titulo{margin:0;font-size:clamp(22px,2.4vw,30px);line-height:1.25;font-weight:800;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .encargo-sub{margin:0;font-size:clamp(18px,1.9vw,24px);line-height:1.3;font-variant-caps:all-small-caps;letter-spacing:var(--tracking-caps);}
+  .encargo-banner .btn{flex:0 0 auto;min-height:56px;padding:0 30px;gap:10px;font-size:16px;}
+  @media (max-width:560px){.encargo-banner{padding:36px 24px;border-radius:32px;}.encargo-banner .btn{width:100%;}}
   .promos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;}
   .promos[hidden]{display:none;}
   .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-pill);background:var(--fondo-medio);font-size:13px;}
@@ -208,6 +214,7 @@
   .detalle-info{flex:1 1 300px;min-width:0;padding:40px 32px 32px;display:flex;flex-direction:column;gap:12px;}
   .detalle-info h2{font-size:26px;font-weight:700;}
   .detalle-info .precio{font-size:28px;}
+  .detalle-desc{margin:0;font-size:15px;line-height:1.5;white-space:pre-line;}
   .detalle-promo{padding:14px 16px;border-radius:12px;background:var(--secundario);font-size:14px;display:flex;flex-direction:column;gap:4px;}
   .detalle-promo strong{font-size:16px;}
   .detalle-info .card-accion{padding-top:12px;}
@@ -422,6 +429,16 @@
         <span data-i18n="como.p3d">Pégala en un mensaje a @carimejackson_art y coordinamos la entrega.</span>
       </li>
     </ol>
+    <div class="encargo-banner">
+      <div class="encargo-texto">
+        <h3 class="encargo-titulo" data-i18n="como.nota">¿No pillas alguna de mis ilustraciones</h3>
+        <p class="encargo-sub" data-i18n="como.notaSub">y la quieres en alguno de estos productos?</p>
+      </div>
+      <a href="https://ig.me/m/carimejackson_art" target="_blank" rel="noopener" class="btn btn-borde">
+        <span class="icono icono-instagram icono-md" aria-hidden="true"></span>
+        <span data-i18n="como.notaBtn">¡Escríbeme para producirlo!</span>
+      </a>
+    </div>
     <div class="promos" id="promos" hidden>
       <span class="caps" style="font-size:12px;font-weight:700;margin-right:6px;" data-i18n="promos.label">Promos por pack:</span>
     </div>
@@ -439,7 +456,7 @@
         <label for="buscar" class="caps" data-i18n="tienda.buscar">Buscar</label>
         <div class="buscador">
           <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
-          <input id="buscar" class="input" type="search" placeholder="Nezuko, Pokémon, Frieren…" autocomplete="off">
+          <input id="buscar" class="input" type="search" placeholder="Nezuko, anime, Harry Potter…" autocomplete="off">
         </div>
       </div>
       <div class="campo">
@@ -700,6 +717,9 @@ const I18N = {
     "como.p2d": "Your cart works out the pack deals on its own. Copy it with one tap.",
     "como.p3t": "Message me",
     "como.p3d": "Paste it into a message to @carimejackson_art and we'll arrange delivery.",
+    "como.nota": "Can't find one of my illustrations",
+    "como.notaSub": "and want it on one of these products?",
+    "como.notaBtn": "Message me and I'll make it!",
     "promos.label": "Pack deals:",
     "tienda.titulo": "Shop",
     "tienda.sub": "Connected to my inventory: prices and stock update automatically.",
@@ -853,6 +873,9 @@ const I18N = {
     "como.p2d": "Seu carrinho calcula sozinho as promoções por pacote. Copie com um toque.",
     "como.p3t": "Me escreva",
     "como.p3d": "Cole numa mensagem para @carimejackson_art e combinamos a entrega.",
+    "como.nota": "Não achou alguma das minhas ilustrações",
+    "como.notaSub": "e quer ela em algum destes produtos?",
+    "como.notaBtn": "Me escreve que eu produzo!",
     "promos.label": "Promoções por pacote:",
     "tienda.titulo": "Loja",
     "tienda.sub": "Conectada ao meu estoque: preços e disponibilidade se atualizam sozinhos.",
@@ -1006,6 +1029,9 @@ const I18N = {
     "como.p2d": "Ton panier calcule tout seul les promos par lot. Copie-la en un clic.",
     "como.p3t": "Écris-moi",
     "como.p3d": "Colle-la dans un message à @carimejackson_art et on organise la livraison.",
+    "como.nota": "Tu ne trouves pas une de mes illustrations",
+    "como.notaSub": "et tu la veux sur l'un de ces produits ?",
+    "como.notaBtn": "Écris-moi pour que je le produise !",
     "promos.label": "Promos par lot :",
     "tienda.titulo": "Boutique",
     "tienda.sub": "Connectée à mon inventaire : les prix et le stock se mettent à jour tout seuls.",
@@ -1159,6 +1185,9 @@ const I18N = {
     "como.p2d": "Dein Warenkorb rechnet die Paketangebote automatisch aus. Kopiere ihn mit einem Tipp.",
     "como.p3t": "Schreib mir",
     "como.p3d": "Füge ihn in eine Nachricht an @carimejackson_art ein, und wir klären die Lieferung.",
+    "como.nota": "Eine meiner Illustrationen ist nicht dabei",
+    "como.notaSub": "und du möchtest sie auf einem dieser Produkte?",
+    "como.notaBtn": "Schreib mir, und ich stelle es her!",
     "promos.label": "Paketangebote:",
     "tienda.titulo": "Shop",
     "tienda.sub": "Mit meinem Lager verbunden: Preise und Bestand aktualisieren sich von selbst.",
@@ -1312,6 +1341,9 @@ const I18N = {
     "como.p2d": "まとめ買い割引はカートが自動で計算します。ワンタップでコピーできます。",
     "como.p3t": "メッセージを送る",
     "como.p3d": "@carimejackson_art へのメッセージに貼り付けてください。お届け方法を相談しましょう。",
+    "como.nota": "私のイラストで見つからないものを",
+    "como.notaSub": "これらの商品にしてほしいですか？",
+    "como.notaBtn": "制作しますので、メッセージをください！",
     "promos.label": "まとめ買い割引：",
     "tienda.titulo": "ショップ",
     "tienda.sub": "在庫と連動しているので、価格と在庫数は自動で更新されます。",
@@ -1445,6 +1477,8 @@ const I18N = {
 const SHEET_ID = "1OuFsKM9asAsjtvtqyvhgJS_przfRn7BO1DBYKzy10n0";
 const GID = "2077533859";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+// Pestaña de precios por categoría: columna B = categoría, columna F = descripción del producto
+const DESC_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=1099909707`;
 const IG_DM = "https://ig.me/m/carimejackson_art";
 const LISTA_KEY = "cj-mi-lista";
 
@@ -1562,6 +1596,7 @@ function traducirFijos(){
 
 let productos = [];
 let promosPorCat = {};
+let descPorCat = {};
 let catActiva = "__todo";
 let lista = {};
 let idsVisibles = [];
@@ -1587,6 +1622,9 @@ function renderCategorias(){
     `<option value="${esc(c.key)}"${c.key === catActiva ? " selected" : ""}>${esc(c.label)} (${c.n})</option>`
   ).join("");
 }
+
+// Sin tildes ni mayúsculas, para que "pokémon" encuentre "pokemon"
+function normalizar(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
 
 // Sin el flag de stock, todo se puede agregar sin tope y nada se ve agotado
 function disponible(p){ return !FLAGS.mostrarStock || p.stock > 0; }
@@ -1614,11 +1652,11 @@ function accionHTML(p, qty){
 }
 
 function renderGrid(){
-  const q = $('buscar').value.trim().toLowerCase();
+  const q = normalizar($('buscar').value.trim());
   const orden = $('orden').value;
   let items = visibles().filter(p =>
     (catActiva === "__todo" || p.categoria === catActiva) &&
-    (!q || p.nombre.toLowerCase().includes(q) || catLabel(p.categoria).toLowerCase().includes(q))
+    (!q || normalizar(p.nombre).includes(q) || normalizar(catLabel(p.categoria)).includes(q) || p.tags.some(tg => normalizar(tg).includes(q)))
   );
   if(orden === "precio-asc") items.sort((a, b) => a.precio - b.precio || a.orden - b.orden);
   if(orden === "precio-desc") items.sort((a, b) => b.precio - a.precio || a.orden - b.orden);
@@ -1782,6 +1820,7 @@ function renderDetalleInfo(){
     <span class="card-cat caps">${esc(catLabel(p.categoria))}</span>
     <h2 id="detalle-nombre">${esc(p.nombre)}</h2>
     <span class="precio">${fmtPrecio(p.precio)} <small class="caps">${t("cu")}</small></span>
+    ${descPorCat[p.categoria] ? `<p class="detalle-desc">${esc(descPorCat[p.categoria])}</p>` : ''}
     ${promo ? `<div class="detalle-promo">
       <span class="caps">${t("promoPack")}</span>
       <strong>${esc(promoLabel(promo))}</strong>
@@ -1928,6 +1967,20 @@ window.addEventListener('wheel', () => { if(Date.now() - ultimoClicAncla > 800) 
 ['touchstart', 'keydown'].forEach(ev =>
   window.addEventListener(ev, () => { anclaPendiente = null; }, {passive: true}));
 
+Papa.parse(DESC_URL, {
+  download: true,
+  header: false,
+  skipEmptyLines: true,
+  complete: function(results){
+    results.data.slice(1).forEach(f => {
+      const cat = String(f[1] || "").trim();
+      const desc = String(f[5] || "").trim();
+      if(cat && desc) descPorCat[cat] = desc;
+    });
+    if($('detalle').open) renderDetalleInfo();
+  }
+});
+
 Papa.parse(CSV_URL, {
   download: true,
   header: false,
@@ -1956,6 +2009,8 @@ Papa.parse(CSV_URL, {
         imgUrl: driveThumb(pickKey(row, ["Foto"])),
         precio: parseMoney(pickKey(row, ["Precio"])),
         stock: Math.max(0, Math.round(stock)),
+        // Columna "Tags": separados por coma, sin repetir
+        tags: [...new Set(String(pickKey(row, ["Tags"]) || "").split(",").map(tg => tg.trim().toLowerCase()).filter(Boolean))],
         orden: i
       };
     }).filter(p => p.nombre && p.precio !== null);
